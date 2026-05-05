@@ -2,18 +2,9 @@
 set -e
 
 echo "Running Backend Tests..."
-cd backend
-if [ -d "venv" ]; then
-    source venv/bin/activate
-    pytest
-else
-    pytest
-fi
-cd ..
+(cd backend && ./test.sh)
 
 echo "Running Frontend Tests..."
-cd frontend
-npm run test
-cd ..
+(cd frontend && ./test.sh)
 
 echo "All tests passed!"

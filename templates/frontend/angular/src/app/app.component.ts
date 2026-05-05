@@ -62,8 +62,8 @@ export class AppComponent {
 
       const data = await response.json();
       this.result = data.result;
-    } catch (err: any) {
-      this.error = err.message;
+    } catch (err: unknown) {
+      this.error = (err as Error).message;
     }
   }
 }
