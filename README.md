@@ -1,14 +1,28 @@
 # create-fullstack-app
 
-A CLI tool for scaffolding a full-stack web application with your choice of frontend and backend technologies.
+A CLI tool for scaffolding a full-stack web application with your choice of frontend and backend technologies. The generated projects use `npm ci` and pinned Python dependencies to ensure fully deterministic and reproducible installations.
+
+## Prerequisites
+
+Before running the CLI or the scaffolded applications, ensure you have the following installed on your system:
+- **Node.js**: v20 or newer
+- **npm**: v10 or newer
+- **Python**: v3.11 or newer
 
 ## Features
 
-- **Frontend Options**: Next.js, Angular, Vue, Svelte
-- **Backend Options**: FastAPI, Flask
+- **Frontend Options**:
+  - Next.js (v16.2.4)
+  - Angular (v21.0.0) - *Configured with Zone.js*
+  - Vue (v3.5.33)
+  - Svelte (v5.55.5)
+- **Backend Options**: 
+  - FastAPI (v0.136.1)
+  - Flask (v3.1.3)
+- **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.
 - **CI/CD Ready**: Includes a pre-configured `.github/workflows/cli-e2e.yml` that tests both ends. *Tip: To enforce this, enable branch protection in your GitHub repository settings and require the "test" status check to pass.*
-- **Developer Experience**: Includes `.vscode/extensions.json` recommending the necessary linters and formatters.
+- **Developer Experience**: Includes `.vscode/extensions.json` recommending the necessary linters and formatters, and a `GEMINI.md` file providing behavioral guidelines for AI agents (based on [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)).
 
 ## Quickstart
 

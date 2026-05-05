@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, fireEvent, waitFor } from '@testing-library/svelte'
+import { render, fireEvent, waitFor } from '@testing-library/svelte/svelte5'
 import App from './App.svelte'
 
 global.fetch = vi.fn(() =>

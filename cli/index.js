@@ -126,7 +126,7 @@ async function main() {
 
     // Frontend installation
     console.log(pc.cyan('  Installing frontend dependencies...'));
-    execSync('npm install', { cwd: targetFrontend, stdio: 'inherit' });
+    execSync('npm ci', { cwd: targetFrontend, stdio: 'inherit' });
 
     // Backend installation
     console.log(pc.cyan('  Setting up backend virtual environment...'));
