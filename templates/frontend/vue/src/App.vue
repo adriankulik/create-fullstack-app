@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
-const number = ref('')
-const result = ref(null)
-const error = ref(null)
+const number = ref<string>('')
+const result = ref<number | null>(null)
+const error = ref<string | null>(null)
 
 const handleSubmit = async () => {
   error.value = null
@@ -24,8 +24,8 @@ const handleSubmit = async () => {
 
     const data = await response.json()
     result.value = data.result
-  } catch (err) {
-    error.value = err.message
+  } catch (err: unknown) {
+    error.value = (err as Error).message
   }
 }
 </script>

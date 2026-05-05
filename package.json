@@ -1,0 +1,29 @@
+{
+  "name": "create-fullstack-app",
+  "version": "1.0.0",
+  "description": "A CLI tool for scaffolding a full-stack web application with your choice of frontend and backend technologies.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "fs-extra": "^11.3.4",
+    "vitest": "^4.1.5",
+    "wait-on": "^9.0.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriankulik/create-fullstack-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adriankulik/create-fullstack-app/issues"
+  },
+  "homepage": "https://github.com/adriankulik/create-fullstack-app#readme"
+}

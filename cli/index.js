@@ -9,15 +9,30 @@ const { execSync } = require('child_process');
 async function main() {
   console.log(pc.cyan('\nWelcome to create-fullstack-app!\n'));
 
-  const response = await prompts([
-    {
+  // Simple argument parsing
+  const args = process.argv.slice(2);
+  let argProjectName = args[0] && !args[0].startsWith('--') ? args[0] : null;
+  let argFrontend = null;
+  let argBackend = null;
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--frontend' && args[i + 1]) argFrontend = args[i + 1];
+    if (args[i] === '--backend' && args[i + 1]) argBackend = args[i + 1];
+  }
+
+  const questions = [];
+  if (!argProjectName) {
+    questions.push({
       type: 'text',
       name: 'projectName',
       message: 'What is your project named?',
       initial: 'my-fullstack-app',
       validate: value => value.trim().length > 0 ? true : 'Project name cannot be empty'
-    },
-    {
+    });
+  }
+
+  if (!argFrontend) {
+    questions.push({
       type: 'select',
       name: 'frontend',
       message: 'Which frontend framework would you like to use?',
@@ -28,8 +43,11 @@ async function main() {
         { title: 'Svelte', value: 'svelte', description: 'Cybernetically enhanced web apps' }
       ],
       initial: 0
-    },
-    {
+    });
+  }
+
+  if (!argBackend) {
+    questions.push({
       type: 'select',
       name: 'backend',
       message: 'Which backend framework would you like to use?',
@@ -38,15 +56,19 @@ async function main() {
         { title: 'Flask', value: 'flask', description: 'Lightweight WSGI web application framework' }
       ],
       initial: 0
-    }
-  ]);
+    });
+  }
 
-  if (!response.projectName || !response.frontend || !response.backend) {
+  const response = await prompts(questions);
+
+  const projectName = argProjectName || response.projectName;
+  const frontend = argFrontend || response.frontend;
+  const backend = argBackend || response.backend;
+
+  if (!projectName || !frontend || !backend) {
     console.log(pc.red('Setup cancelled.'));
     process.exit(1);
   }
-
-  const { projectName, frontend, backend } = response;
   const targetDir = path.resolve(process.cwd(), projectName);
 
   if (fs.existsSync(targetDir)) {
@@ -65,6 +87,9 @@ async function main() {
   try {
     // 1. Copy base template
     await fs.copy(baseDir, targetDir);
+    if (fs.existsSync(path.join(targetDir, 'gitignore'))) {
+      await fs.rename(path.join(targetDir, 'gitignore'), path.join(targetDir, '.gitignore'));
+    }
 
     // 2. Copy frontend
     const targetFrontend = path.join(targetDir, 'frontend');
@@ -82,21 +107,26 @@ async function main() {
       await fs.writeJson(pkgPath, pkg, { spaces: 2 });
     }
 
-    // 5. Make shell scripts executable
-    const scripts = ['start.sh', 'test.sh', 'lint.sh'];
-    scripts.forEach(script => {
-      const scriptPath = path.join(targetDir, script);
-      if (fs.existsSync(scriptPath)) {
-        fs.chmodSync(scriptPath, 0o755);
-      }
-    });
+    // 5. Make all shell scripts executable
+    const makeExecutable = (dir) => {
+      const files = fs.readdirSync(dir);
+      files.forEach(file => {
+        const filePath = path.join(dir, file);
+        if (fs.statSync(filePath).isDirectory()) {
+          makeExecutable(filePath);
+        } else if (file.endsWith('.sh')) {
+          fs.chmodSync(filePath, 0o755);
+        }
+      });
+    };
+    makeExecutable(targetDir);
 
     // 6. Install dependencies
     console.log(pc.blue('\nInstalling dependencies (this may take a minute)...'));
 
     // Frontend installation
     console.log(pc.cyan('  Installing frontend dependencies...'));
-    execSync('npm install', { cwd: targetFrontend, stdio: 'inherit' });
+    execSync('npm ci', { cwd: targetFrontend, stdio: 'inherit' });
 
     // Backend installation
     console.log(pc.cyan('  Setting up backend virtual environment...'));

@@ -1,7 +1,7 @@
-<script>
-  let number = '';
-  let result = null;
-  let error = null;
+<script lang="ts">
+  let number: string = '';
+  let result: number | null = null;
+  let error: string | null = null;
 
   async function handleSubmit() {
     error = null;
@@ -22,8 +22,8 @@
 
       const data = await response.json();
       result = data.result;
-    } catch (err) {
-      error = err.message;
+    } catch (err: unknown) {
+      error = (err as Error).message;
     }
   }
 </script>

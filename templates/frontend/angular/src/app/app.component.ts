@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -42,6 +42,8 @@ export class AppComponent {
   result: number | null = null;
   error: string | null = null;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   async handleSubmit(event: Event) {
     event.preventDefault();
     this.error = null;
@@ -62,8 +64,10 @@ export class AppComponent {
 
       const data = await response.json();
       this.result = data.result;
-    } catch (err: any) {
-      this.error = err.message;
+    } catch (err: unknown) {
+      this.error = (err as Error).message;
     }
+    
+    this.cdr.detectChanges();
   }
 }

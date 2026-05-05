@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 
 export default function Home() {
-  const [number, setNumber] = useState('');
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
+  const [number, setNumber] = useState<string>('');
+  const [result, setResult] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setResult(null);
@@ -27,8 +27,8 @@ export default function Home() {
 
       const data = await response.json();
       setResult(data.result);
-    } catch (err) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     }
   };
 

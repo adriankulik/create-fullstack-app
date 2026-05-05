@@ -2,21 +2,9 @@
 set -e
 
 echo "Linting and Formatting Backend..."
-cd backend
-if [ -d "venv" ]; then
-    source venv/bin/activate
-    ruff check . --fix
-    ruff format .
-else
-    ruff check . --fix
-    ruff format .
-fi
-cd ..
+(cd backend && ./lint.sh)
 
 echo "Linting and Formatting Frontend..."
-cd frontend
-npm run lint
-npx prettier --write .
-cd ..
+(cd frontend && ./lint.sh)
 
 echo "Linting and formatting complete!"

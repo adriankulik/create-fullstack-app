@@ -1,0 +1,70 @@
+name: CLI E2E Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        frontend: [nextjs, angular, vue, svelte]
+        backend: [fastapi, flask]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: |
+        npm install
+        npm install -D @playwright/test wait-on
+        cd cli && npm install
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+
+    - name: Scaffold App (${{ matrix.frontend }} + ${{ matrix.backend }})
+      run: node cli/index.js test-app --frontend ${{ matrix.frontend }} --backend ${{ matrix.backend }}
+
+    - name: Run lint.sh
+      run: cd test-app && ./lint.sh
+
+    - name: Run test.sh
+      run: cd test-app && ./test.sh
+
+    - name: Start Servers and Run Integration Test
+      env:
+        FRONTEND: ${{ matrix.frontend }}
+      run: |
+        cd test-app
+        # Start the backend and frontend in the background
+        nohup ./start.sh > start.log 2>&1 &
+        
+        # Wait for the backend to be healthy
+        npx wait-on http-get://127.0.0.1:8000/api/health -t 60000
+        
+        # Wait for the frontend to be reachable
+        if [ "$FRONTEND" = "nextjs" ]; then
+          npx wait-on http-get://127.0.0.1:3000 -t 60000
+        elif [ "$FRONTEND" = "angular" ]; then
+          npx wait-on http-get://127.0.0.1:4200 -t 60000
+        else
+          npx wait-on http-get://127.0.0.1:5173 -t 60000
+        fi
+        
+        # Run the Playwright integration test from the root directory
+        cd ..
+        npx playwright test tests/integration.spec.js --project=chromium

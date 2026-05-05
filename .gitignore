@@ -16,8 +16,13 @@ dist/
 out/
 build/
 test-app/
-test*/
-**/test*/
+test-app-*/
+test-app-out/
+test-results/
+playwright-report/
+e2e-matrix-temp-app/
+e2e-tests-output/
+**/e2e-tests-output/
 
 # Angular cache
 .angular/
