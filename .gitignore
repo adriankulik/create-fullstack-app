@@ -18,6 +18,8 @@ build/
 test-app/
 test*/
 **/test*/
+e2e-tests-output/
+**/e2e-tests-output/
 
 # Angular cache
 .angular/
