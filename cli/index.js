@@ -174,15 +174,25 @@ async function main() {
     console.log(pc.cyan('  ./start.sh'));
     console.log('\nHappy coding!');
 
-    // Cleanup: remove everything in the root folder besides git-related files and the new project
+    // Cleanup: remove everything in the root folder besides the new project
     if (cleanup) {
       const rootDir = path.resolve(__dirname, '..');
       const items = fs.readdirSync(rootDir);
       for (const item of items) {
-        if (item === '.git' || item === '.gitignore' || item === projectName) {
+        if (item === projectName) {
           continue;
         }
         fs.removeSync(path.join(rootDir, item));
+      }
+
+      // Initialize a new git repository in the scaffolded project
+      try {
+        execSync('git init', { cwd: targetDir, stdio: 'ignore' });
+        execSync('git add .', { cwd: targetDir, stdio: 'ignore' });
+        execSync('git commit -m "Initial commit from create-fullstack-app"', { cwd: targetDir, stdio: 'ignore' });
+        console.log(pc.cyan('\nInitialized a new git repository in ') + pc.green(projectName));
+      } catch (e) {
+        // Silently fail if git is not available or fails to initialize
       }
     }
 
