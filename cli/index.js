@@ -14,10 +14,13 @@ async function main() {
   let argProjectName = args[0] && !args[0].startsWith('--') ? args[0] : null;
   let argFrontend = null;
   let argBackend = null;
+  let skipCleanup = true;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--frontend' && args[i + 1]) argFrontend = args[i + 1];
     if (args[i] === '--backend' && args[i + 1]) argBackend = args[i + 1];
+    if (args[i] === '--skip-cleanup') skipCleanup = true;
+    if (args[i] === '--cleanup') skipCleanup = false;
   }
 
   const questions = [];
@@ -162,13 +165,15 @@ async function main() {
     console.log('\nHappy coding!');
 
     // Cleanup: remove everything in the root folder besides git-related files and the new project
-    const rootDir = path.resolve(__dirname, '..');
-    const items = fs.readdirSync(rootDir);
-    for (const item of items) {
-      if (item === '.git' || item === '.gitignore' || item === projectName) {
-        continue;
+    if (!skipCleanup) {
+      const rootDir = path.resolve(__dirname, '..');
+      const items = fs.readdirSync(rootDir);
+      for (const item of items) {
+        if (item === '.git' || item === '.gitignore' || item === projectName) {
+          continue;
+        }
+        fs.removeSync(path.join(rootDir, item));
       }
-      fs.removeSync(path.join(rootDir, item));
     }
 
   } catch (error) {
