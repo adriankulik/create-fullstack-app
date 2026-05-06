@@ -175,7 +175,7 @@ async function main() {
     console.log('\nHappy coding!');
 
     // Cleanup: remove everything in the root folder besides git-related files and the new project
-    if (!skipCleanup) {
+    if (cleanup) {
       const rootDir = path.resolve(__dirname, '..');
       const items = fs.readdirSync(rootDir);
       for (const item of items) {
