@@ -69,7 +69,7 @@ async function main() {
     console.log(pc.red('Setup cancelled.'));
     process.exit(1);
   }
-  const targetDir = path.resolve(process.cwd(), projectName);
+  const targetDir = path.resolve(__dirname, '..', projectName);
 
   if (fs.existsSync(targetDir)) {
     console.log(pc.red(`Directory ${projectName} already exists.`));
@@ -160,6 +160,16 @@ async function main() {
     console.log(pc.cyan(`  cd ${projectName}`));
     console.log(pc.cyan('  ./start.sh'));
     console.log('\nHappy coding!');
+
+    // Cleanup: remove everything in the root folder besides git-related files and the new project
+    const rootDir = path.resolve(__dirname, '..');
+    const items = fs.readdirSync(rootDir);
+    for (const item of items) {
+      if (item === '.git' || item === '.gitignore' || item === projectName) {
+        continue;
+      }
+      fs.removeSync(path.join(rootDir, item));
+    }
 
   } catch (error) {
     console.error(pc.red('Error scaffolding project:'), error);
