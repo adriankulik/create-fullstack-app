@@ -14,13 +14,13 @@ async function main() {
   let argProjectName = args[0] && !args[0].startsWith('--') ? args[0] : null;
   let argFrontend = null;
   let argBackend = null;
-  let skipCleanup = true;
+  let argCleanup = null;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--frontend' && args[i + 1]) argFrontend = args[i + 1];
     if (args[i] === '--backend' && args[i + 1]) argBackend = args[i + 1];
-    if (args[i] === '--skip-cleanup') skipCleanup = true;
-    if (args[i] === '--cleanup') skipCleanup = false;
+    if (args[i] === '--skip-cleanup') argCleanup = false;
+    if (args[i] === '--cleanup') argCleanup = true;
   }
 
   const questions = [];
@@ -62,11 +62,21 @@ async function main() {
     });
   }
 
+  if (argCleanup === null) {
+    questions.push({
+      type: 'confirm',
+      name: 'cleanup',
+      message: 'Do you want to cleanup the root directory (remove everything except git files and the new project)?',
+      initial: true
+    });
+  }
+
   const response = await prompts(questions);
 
   const projectName = argProjectName || response.projectName;
   const frontend = argFrontend || response.frontend;
   const backend = argBackend || response.backend;
+  const cleanup = argCleanup !== null ? argCleanup : response.cleanup;
 
   if (!projectName || !frontend || !backend) {
     console.log(pc.red('Setup cancelled.'));

@@ -27,7 +27,7 @@ for frontend in "${FRONTENDS[@]}"; do
     echo "========================================================"
 
     # Scaffold the app
-    node cli/index.js $TEST_APP_DIR --frontend $frontend --backend $backend
+    node cli/index.js $TEST_APP_DIR --frontend $frontend --backend $backend --skip-cleanup
 
     echo "Running lint.sh..."
     (cd $TEST_APP_DIR && ./lint.sh)

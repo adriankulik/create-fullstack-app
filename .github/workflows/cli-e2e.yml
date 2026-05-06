@@ -37,7 +37,7 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Scaffold App (${{ matrix.frontend }} + ${{ matrix.backend }})
-      run: node cli/index.js test-app --frontend ${{ matrix.frontend }} --backend ${{ matrix.backend }}
+      run: node cli/index.js test-app --frontend ${{ matrix.frontend }} --backend ${{ matrix.backend }} --skip-cleanup
 
     - name: Run lint.sh
       run: cd test-app && ./lint.sh
