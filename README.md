@@ -9,6 +9,18 @@ Before running the CLI or the scaffolded applications, ensure you have the follo
 - **npm**: v10 or newer
 - **Python**: v3.11 or newer
 
+## Quickstart
+
+Run the CLI tool directly using Node.js:
+
+```bash
+cd cli
+npm install
+node index.js
+```
+
+You will be prompted to choose a project name, your preferred frontend, and backend framework.
+
 ## Features
 
 - **Frontend Options**:
@@ -23,18 +35,6 @@ Before running the CLI or the scaffolded applications, ensure you have the follo
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.
 - **CI/CD Ready**: Includes a pre-configured `.github/workflows/cli-e2e.yml` that tests both ends. *Tip: To enforce this, enable branch protection in your GitHub repository settings and require the "test" status check to pass.*
 - **Developer Experience**: Includes `.vscode/extensions.json` recommending the necessary linters and formatters, and a `GEMINI.md` file providing behavioral guidelines for AI agents (based on [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)).
-
-## Quickstart
-
-Run the CLI tool directly using Node.js:
-
-```bash
-cd cli
-npm install
-node index.js
-```
-
-You will be prompted to choose a project name, your preferred frontend, and backend framework.
 
 ## Generated Project
 
