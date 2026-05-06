@@ -152,34 +152,33 @@ async function main() {
       console.log(pc.yellow('  Could not set up Python virtual environment automatically. Please set it up manually.'));
     }
 
-    // 7. Initialize Git
-    console.log(pc.blue('\nInitializing Git repository...'));
-    try {
-      const gitDir = path.join(targetDir, '.git');
-      if (fs.existsSync(gitDir)) {
-        await fs.remove(gitDir);
-      }
-      execSync('git init', { cwd: targetDir, stdio: 'ignore' });
-      execSync('git add .', { cwd: targetDir, stdio: 'ignore' });
-      execSync('git commit -m "Initial commit from create-fullstack-app"', { cwd: targetDir, stdio: 'ignore' });
-      console.log(pc.cyan('  Git repository initialized successfully.'));
-    } catch (e) {
-      console.log(pc.yellow('  Could not initialize Git repository. You can do it manually with `git init`.'));
-    }
-
     const cliRootDir = path.resolve(__dirname, '..');
     const currentCwd = process.cwd();
+    let finalTargetDir = targetDir;
 
-    console.log(pc.green(`\nSuccess! Created ${projectName} at ${targetDir}`));
+    // 7. Protect and Cleanup
+    const isInsideSource = targetDir.startsWith(cliRootDir);
+    if (isInsideSource && shouldCleanup) {
+      console.log(pc.blue('\nProtecting scaffolded project...'));
+      const safeParentDir = path.resolve(cliRootDir, '..');
+      const safeTargetDir = path.join(safeParentDir, projectName);
 
-    // 8. Cleanup source files if requested
+      if (fs.existsSync(safeTargetDir)) {
+        console.log(pc.yellow(`  Warning: Could not move project to ${safeTargetDir} (already exists). Cleanup will skip the project folder.`));
+      } else {
+        await fs.move(targetDir, safeTargetDir);
+        finalTargetDir = safeTargetDir;
+        console.log(pc.cyan(`  Project moved to safety: ${finalTargetDir}`));
+      }
+    }
+
     if (shouldCleanup) {
-      const isInsideDeletedDir = currentCwd.startsWith(cliRootDir) && !currentCwd.startsWith(targetDir);
+      const isInsideDeletedDir = currentCwd.startsWith(cliRootDir) && !currentCwd.startsWith(finalTargetDir);
 
       if (isInsideDeletedDir) {
         console.log(pc.yellow('\nWARNING: You are running this command from a directory that will be deleted.'));
         console.log(pc.yellow('Your terminal will be left in a non-existent directory.'));
-        console.log(pc.yellow(`After this script finishes, please run: cd ${projectName}`));
+        console.log(pc.yellow(`After this script finishes, please run: cd .. && cd ${projectName}`));
       }
 
       console.log(pc.blue('\nCleaning up source files...'));
@@ -188,6 +187,8 @@ async function main() {
         'templates',
         'tests',
         '.github',
+        '.git',
+        'node_modules',
         'run_e2e.sh',
         'playwright.config.js',
         'package.json',
@@ -199,12 +200,29 @@ async function main() {
 
       for (const file of filesToDelete) {
         const filePath = path.join(cliRootDir, file);
-        if (fs.existsSync(filePath)) {
+        if (fs.existsSync(filePath) && filePath !== finalTargetDir) {
           await fs.remove(filePath);
         }
       }
       console.log(pc.cyan('  Cleanup completed.'));
     }
+
+    // 8. Initialize Git in the final location
+    console.log(pc.blue('\nInitializing Git repository...'));
+    try {
+      const gitDir = path.join(finalTargetDir, '.git');
+      if (fs.existsSync(gitDir)) {
+        await fs.remove(gitDir);
+      }
+      execSync('git init', { cwd: finalTargetDir, stdio: 'ignore' });
+      execSync('git add .', { cwd: finalTargetDir, stdio: 'ignore' });
+      execSync('git commit -m "Initial commit from create-fullstack-app"', { cwd: finalTargetDir, stdio: 'ignore' });
+      console.log(pc.cyan('  Git repository initialized successfully.'));
+    } catch (e) {
+      console.log(pc.yellow('  Could not initialize Git repository. You can do it manually with `git init`.'));
+    }
+
+    console.log(pc.green(`\nSuccess! Created ${projectName} at ${finalTargetDir}`));
 
     console.log('\nInside that directory, you can run several commands:\n');
 
