@@ -35,3 +35,15 @@ To start both the frontend and backend development servers, simply run:
   ```bash
   ./lint.sh
   ```
+
+## AI Development Friendly
+
+This repository is optimized for development with AI agents:
+- **`AGENTS.md`**: Provides behavioral guidelines and critical instructions to constrain and guide the AI.
+- **`ACCESSIBILITY.md`**: Provides accessibility guidelines and constraints to guide the AI's implementations.
+- **`.agents/skills/`**: Includes an extensive set of agent skills sourced from [claude-skills](https://github.com/alirezarezvani/claude-skills).
+
+<details>
+<summary>Included Agent Skills</summary>
+<p>senior-frontend, senior-qa, senior-fullstack, accessibility-general</p>
+</details>
