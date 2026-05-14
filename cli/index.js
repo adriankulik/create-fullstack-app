@@ -144,6 +144,17 @@ async function main() {
       console.log(pc.yellow('  Could not set up Python virtual environment automatically. Please set it up manually.'));
     }
 
+    // 7. Initialize Git repository
+    console.log(pc.blue('\nInitializing Git repository...'));
+    try {
+      execSync('git init', { cwd: targetDir, stdio: 'ignore' });
+      execSync('git add .', { cwd: targetDir, stdio: 'ignore' });
+      execSync('git commit -m "Initial commit from create-fullstack-app"', { cwd: targetDir, stdio: 'ignore' });
+      console.log(pc.cyan('  Git repository initialized.'));
+    } catch (e) {
+      console.log(pc.yellow('  Could not initialize Git repository automatically. You may need to run git init yourself.'));
+    }
+
     console.log(pc.green(`\nSuccess! Created ${projectName} at ${targetDir}`));
     console.log('\nInside that directory, you can run several commands:\n');
 
