@@ -1,5 +1,8 @@
 {
   "name": "@adriankulik/create-fullstack-app",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.1",
   "description": "A CLI tool for scaffolding a full-stack web application with your choice of frontend and backend technologies.",
   "main": "cli/index.js",
