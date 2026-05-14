@@ -7,6 +7,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 async function main() {
+  const { asciiArt } = require('./logo');
+  console.log(pc.cyan(asciiArt));
   console.log(pc.cyan('\nWelcome to create-fullstack-app!\n'));
 
   // Simple argument parsing
