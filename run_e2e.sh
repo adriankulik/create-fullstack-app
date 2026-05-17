@@ -6,7 +6,7 @@ export PATH="$HOME/.dotnet:$PATH"
 export DOTNET_ROOT="$HOME/.dotnet"
 
 cleanup() {
-  echo "Caught error or exiting. Cleaning up lingering servers..."
+  echo "Cleaning up lingering servers..."
   lsof -ti:8000,3000,4200,5173 | xargs kill -9 >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
