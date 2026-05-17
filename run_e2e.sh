@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+# Make sure the locally installed .NET 9 SDK is in the PATH if the CLI just installed it
+export PATH="$HOME/.dotnet:$PATH"
+export DOTNET_ROOT="$HOME/.dotnet"
+
 echo "Starting CLI End-to-End Local Matrix Tests..."
 
 echo "Installing root dependencies..."
@@ -12,6 +16,9 @@ npx playwright install --with-deps chromium
 
 echo "Installing CLI dependencies..."
 cd cli && npm install && cd ..
+
+echo "Installing .NET 9 SDK for E2E tests (non-interactive)..."
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 9.0
 
 FRONTENDS=($(find templates/frontend -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
 BACKENDS=($(find templates/backend -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
