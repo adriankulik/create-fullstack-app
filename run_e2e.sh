@@ -13,8 +13,8 @@ npx playwright install --with-deps chromium
 echo "Installing CLI dependencies..."
 cd cli && npm install && cd ..
 
-FRONTENDS=("nextjs" "angular" "vue" "svelte")
-BACKENDS=("fastapi" "flask")
+FRONTENDS=($(find templates/frontend -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
+BACKENDS=($(find templates/backend -mindepth 1 -maxdepth 1 -type d -exec basename {} \;))
 TEST_APP_DIR="e2e-matrix-temp-app"
 
 # Clean up any previous run
@@ -40,8 +40,8 @@ for frontend in "${FRONTENDS[@]}"; do
     START_PID=$!
 
     # Wait for backend
-    echo "Waiting for backend on http://127.0.0.1:8000/api/health..."
-    npx wait-on http-get://127.0.0.1:8000/api/health -t 60000
+    echo "Waiting for backend on tcp:8000..."
+    npx wait-on tcp:8000 -t 60000
 
     # Wait for frontend
     if [ "$frontend" = "nextjs" ]; then
@@ -66,6 +66,7 @@ for frontend in "${FRONTENDS[@]}"; do
     kill -9 $START_PID >/dev/null 2>&1 || true
 
     echo "Cleaning up directory..."
+    sleep 1
     rm -rf $TEST_APP_DIR
 
     echo "Combination $frontend + $backend completed successfully!"
@@ -73,4 +74,5 @@ for frontend in "${FRONTENDS[@]}"; do
   done
 done
 
-echo "All 8 permutations tested successfully locally!"
+PERMUTATIONS=$((${#FRONTENDS[@]} * ${#BACKENDS[@]}))
+echo "All $PERMUTATIONS permutations tested successfully locally!"
