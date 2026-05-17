@@ -4,6 +4,7 @@ const prompts = require("prompts");
 const pc = require("picocolors");
 const fs = require("fs-extra");
 const path = require("path");
+const os = require("os");
 const { execSync } = require("child_process");
 
 async function main() {
@@ -83,20 +84,10 @@ async function main() {
           description: "Robust, C#, high-performance framework by Microsoft",
         },
         {
-          title: "Spring Boot",
-          value: "spring-boot",
-          description: "Powerful, Java, enterprise-ready framework",
-        },
-        {
           title: "Node.js (Express)",
           value: "nodejs",
           description: "Minimalist web framework for Node.js",
         },
-        {
-          title: "Rust (Rocket)",
-          value: "rust",
-          description: "Web framework for Rust with focus on ease of use",
-        }
       ],
       initial: 0,
     });
@@ -203,27 +194,63 @@ async function main() {
         );
       }
     } else if (backend === "dotnet") {
+      // Check if .NET 9+ SDK is available
+      let dotnetMajor = 0;
+      try {
+        const version = execSync("dotnet --version", { stdio: "pipe" }).toString().trim();
+        dotnetMajor = parseInt(version.split(".")[0], 10);
+      } catch {
+        dotnetMajor = 0;
+      }
+
+      if (dotnetMajor < 9) {
+        console.log(pc.yellow(`\n  .NET 9 SDK is required but ${dotnetMajor > 0 ? `v${dotnetMajor} was found` : "dotnet was not found"} on your system.`));
+
+        if (process.platform === "win32") {
+          console.log(pc.yellow("  Please install the .NET 9 SDK from: https://aka.ms/dotnet/download"));
+        } else {
+          const { installDotnet } = await prompts({
+            type: "confirm",
+            name: "installDotnet",
+            message: "Would you like to install the .NET 9 SDK automatically? (uses the official Microsoft install script)",
+            initial: true,
+          });
+
+          if (installDotnet) {
+            console.log(pc.cyan("  Installing .NET 9 SDK (this may take a few minutes)..."));
+            try {
+              execSync(
+                "curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 9.0",
+                { stdio: "inherit" }
+              );
+              // Make the newly installed dotnet available in the current process without a shell restart
+              const dotnetRoot = path.join(os.homedir(), ".dotnet");
+              process.env.DOTNET_ROOT = dotnetRoot;
+              process.env.PATH = `${dotnetRoot}:${process.env.PATH}`;
+              console.log(pc.green("  .NET 9 SDK installed successfully."));
+              console.log(pc.yellow(`  Add ${dotnetRoot} to your PATH permanently by updating your shell profile (e.g. ~/.zshrc).`));
+            } catch (e) {
+              console.log(pc.yellow("  Could not install .NET SDK automatically. Please install it from https://aka.ms/dotnet/download"));
+            }
+          } else {
+            console.log(pc.yellow("  Skipping .NET SDK installation. Please install .NET 9 SDK from https://aka.ms/dotnet/download"));
+          }
+        }
+      }
+
       console.log(pc.cyan("  Restoring .NET dependencies..."));
       try {
         execSync("dotnet restore backend.sln", { cwd: targetBackend, stdio: "inherit" });
       } catch (e) {
         console.log(
           pc.yellow(
-            "  Could not restore .NET dependencies automatically. Please make sure .NET SDK is installed.",
+            "  Could not restore .NET dependencies automatically. Please make sure .NET 9 SDK is installed and in your PATH.",
           ),
         );
       }
-    } else if (backend === "spring-boot") {
-      console.log(
-        pc.cyan(
-          "  Spring Boot project created. Dependencies will be downloaded via Maven wrapper on first run.",
-        ),
-      );
     } else if (backend === "nodejs") {
       console.log(pc.cyan("  Installing Node.js backend dependencies..."));
       execSync("npm ci", { cwd: targetBackend, stdio: "inherit" });
-    } else if (backend === "rust") {
-      console.log(pc.cyan("  Rust backend created. Cargo will manage dependencies automatically on first run."));
     }
 
     // 7. Initialize Git repository
