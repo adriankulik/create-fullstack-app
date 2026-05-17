@@ -7,13 +7,28 @@ on:
     branches: [ main ]
 
 jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      frontends: ${{ steps.set-matrix.outputs.frontends }}
+      backends: ${{ steps.set-matrix.outputs.backends }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          FRONTENDS=$(find templates/frontend -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+          BACKENDS=$(find templates/backend -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+          echo "frontends=$FRONTENDS" >> $GITHUB_OUTPUT
+          echo "backends=$BACKENDS" >> $GITHUB_OUTPUT
+
   e2e:
+    needs: generate-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        frontend: [nextjs, angular, vue, svelte]
-        backend: [fastapi, flask]
+        frontend: ${{ fromJson(needs.generate-matrix.outputs.frontends) }}
+        backend: ${{ fromJson(needs.generate-matrix.outputs.backends) }}
     steps:
     - uses: actions/checkout@v4
 
@@ -26,6 +41,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
+    - name: Set up .NET
+      if: matrix.backend == 'dotnet'
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
 
     - name: Install Dependencies
       run: |
@@ -54,7 +75,7 @@ jobs:
         nohup ./start.sh > start.log 2>&1 &
         
         # Wait for the backend to be healthy
-        npx wait-on http-get://127.0.0.1:8000/api/health -t 60000
+        npx wait-on tcp:8000 -t 60000
         
         # Wait for the frontend to be reachable
         if [ "$FRONTEND" = "nextjs" ]; then
