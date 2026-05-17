@@ -23,6 +23,4 @@ class MultiplyResponse(BaseModel):
 def multiply_number(request: MultiplyRequest):
     return MultiplyResponse(result=request.number * 2)
 
-@app.get("/api/health")
-def health_check():
-    return {"status": "ok"}
+

@@ -16,9 +16,7 @@ def multiply_number():
     except ValueError:
         return jsonify({"error": "Invalid number"}), 400
 
-@app.route("/api/health", methods=["GET"])
-def health_check():
-    return jsonify({"status": "ok"})
+
 
 if __name__ == "__main__":
     app.run(port=8000)

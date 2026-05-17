@@ -6,10 +6,6 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_health_check(client):
-    response = client.get("/api/health")
-    assert response.status_code == 200
-    assert response.get_json() == {"status": "ok"}
 
 def test_multiply_number(client):
     response = client.post("/api/multiply", json={"number": 5})
