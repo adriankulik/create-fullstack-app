@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 if [ -d "venv" ]; then
     source venv/bin/activate
     python -m uvicorn main:app --reload --port 8000

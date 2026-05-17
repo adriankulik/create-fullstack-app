@@ -11,7 +11,7 @@ const CLI_PATH = path.resolve(__dirname, '../cli/index.js');
 const TEST_ROOT = path.resolve(__dirname, '../e2e-tests-output');
 
 const FRONTENDS = ['nextjs', 'angular', 'vue', 'svelte'];
-const BACKENDS = ['fastapi', 'flask'];
+const BACKENDS = ['fastapi', 'flask', 'dotnet', 'nodejs'];
 
 describe('CLI End-to-End Tests', () => {
   beforeAll(() => {

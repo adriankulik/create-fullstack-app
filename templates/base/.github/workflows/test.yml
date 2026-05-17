@@ -12,25 +12,41 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
+    # --- Language Runtimes (conditional) ---
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Install backend dependencies
-      run: |
-        cd backend
-        pip install -r requirements.txt
+    - name: Set up Python
+      if: hashFiles('backend/requirements.txt') != ''
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
+    - name: Set up .NET
+      if: hashFiles('backend/*.sln') != ''
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    # --- Backend Dependencies (conditional) ---
+    - name: Install Python backend dependencies
+      if: hashFiles('backend/requirements.txt') != ''
+      run: pip install -r backend/requirements.txt
+
+    - name: Install Node.js backend dependencies
+      if: hashFiles('backend/package.json') != ''
+      run: cd backend && npm ci
+
+    - name: Restore .NET backend dependencies
+      if: hashFiles('backend/*.sln') != ''
+      run: cd backend && dotnet restore backend.sln
+
+    # --- Frontend Dependencies ---
     - name: Install frontend dependencies
-      run: |
-        cd frontend
-        npm install
+      run: cd frontend && npm ci
 
+    # --- Run Tests ---
     - name: Run tests
       run: ./test.sh

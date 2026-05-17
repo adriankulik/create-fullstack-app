@@ -2,16 +2,16 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '../app/page';
 
 // Mock fetch
-global.fetch = jest.fn(() =>
+globalThis.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ result: 10 }),
-  })
-);
+  } as unknown as Response)
+) as typeof fetch;
 
 describe('Home', () => {
   beforeEach(() => {
-    fetch.mockClear();
+    (fetch as jest.Mock).mockClear();
   });
 
   it('renders a heading', () => {

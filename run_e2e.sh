@@ -5,6 +5,12 @@ set -e
 export PATH="$HOME/.dotnet:$PATH"
 export DOTNET_ROOT="$HOME/.dotnet"
 
+cleanup() {
+  echo "Cleaning up lingering servers..."
+  lsof -ti:8000,3000,4200,5173 | xargs kill -9 >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
 echo "Starting CLI End-to-End Local Matrix Tests..."
 
 echo "Installing root dependencies..."
@@ -14,8 +20,7 @@ npm install -D @playwright/test wait-on
 echo "Ensuring Playwright Browsers are installed..."
 npx playwright install --with-deps chromium
 
-echo "Installing CLI dependencies..."
-cd cli && npm install && cd ..
+echo "CLI dependencies installed via root package.json."
 
 echo "Installing .NET 9 SDK for E2E tests (non-interactive)..."
 curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 9.0
@@ -59,8 +64,8 @@ for frontend in "${FRONTENDS[@]}"; do
       PORT=5173
     fi
 
-    echo "Waiting for frontend on http://127.0.0.1:$PORT..."
-    npx wait-on http-get://127.0.0.1:$PORT -t 60000
+    echo "Waiting for frontend on http://localhost:$PORT..."
+    npx wait-on http-get://localhost:$PORT -t 60000
 
     echo "Running Playwright integration test..."
     FRONTEND=$frontend npx playwright test tests/integration.spec.js --project=chromium

@@ -52,7 +52,6 @@ jobs:
       run: |
         npm install
         npm install -D @playwright/test wait-on
-        cd cli && npm install
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
@@ -79,11 +78,11 @@ jobs:
         
         # Wait for the frontend to be reachable
         if [ "$FRONTEND" = "nextjs" ]; then
-          npx wait-on http-get://127.0.0.1:3000 -t 60000
+          npx wait-on http-get://localhost:3000 -t 60000
         elif [ "$FRONTEND" = "angular" ]; then
-          npx wait-on http-get://127.0.0.1:4200 -t 60000
+          npx wait-on http-get://localhost:4200 -t 60000
         else
-          npx wait-on http-get://127.0.0.1:5173 -t 60000
+          npx wait-on http-get://localhost:5173 -t 60000
         fi
         
         # Run the Playwright integration test from the root directory

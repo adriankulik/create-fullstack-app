@@ -1,14 +1,21 @@
 <script lang="ts">
-  let number: string = '';
-  let result: number | null = null;
-  let error: string | null = null;
+  interface MultiplyResponse {
+    result: number;
+  }
 
-  async function handleSubmit() {
+  let number: string = $state('');
+  let result: number | null = $state(null);
+  let error: string | null = $state(null);
+
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+  async function handleSubmit(e: Event) {
+    e.preventDefault();
     error = null;
     result = null;
 
     try {
-      const response = await fetch('http://localhost:8000/api/multiply', {
+      const response = await fetch(`${apiUrl}/api/multiply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +27,7 @@
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      const data: MultiplyResponse = await response.json();
       result = data.result;
     } catch (err: unknown) {
       error = (err as Error).message;
@@ -30,7 +37,7 @@
 
 <main style="padding: 2rem; font-family: sans-serif;">
   <h1>Multiplier App (Svelte)</h1>
-  <form on:submit|preventDefault={handleSubmit} style="margin-bottom: 1rem;">
+  <form onsubmit={handleSubmit} style="margin-bottom: 1rem;">
     <label for="numberInput" style="display: block; margin-bottom: 0.5rem;">
       Enter a number:
     </label>

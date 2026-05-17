@@ -2,16 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import App from '../App.vue'
 
-global.fetch = vi.fn(() =>
+globalThis.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ result: 10 }),
-  })
-)
+  } as unknown as Response)
+) as typeof fetch
 
 describe('App', () => {
   beforeEach(() => {
-    fetch.mockClear()
+    (fetch as ReturnType<typeof vi.fn>).mockClear()
   })
 
   it('renders a heading', () => {
