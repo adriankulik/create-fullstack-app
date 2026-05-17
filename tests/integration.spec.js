@@ -6,7 +6,7 @@ test('End-to-End Integration Test', async ({ page }) => {
   if (frontend === 'angular') port = 4200;
   if (frontend === 'vue' || frontend === 'svelte') port = 5173;
 
-  const url = `http://127.0.0.1:${port}`;
+  const url = `http://localhost:${port}`;
   
   // Navigate to the frontend app
   await page.goto(url, { waitUntil: 'networkidle' });

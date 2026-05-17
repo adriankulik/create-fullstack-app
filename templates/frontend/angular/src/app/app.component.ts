@@ -1,46 +1,23 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+interface MultiplyResponse {
+  result: number;
+}
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
-    <main style="padding: 2rem; font-family: sans-serif;">
-      <h1>Multiplier App (Angular)</h1>
-      <form (submit)="handleSubmit($event)" style="margin-bottom: 1rem;">
-        <label for="numberInput" style="display: block; margin-bottom: 0.5rem;">
-          Enter a number:
-        </label>
-        <input
-          id="numberInput"
-          type="number"
-          step="any"
-          [(ngModel)]="number"
-          name="number"
-          required
-          style="padding: 0.5rem; margin-right: 0.5rem;"
-        />
-        <button type="submit" style="padding: 0.5rem 1rem;">
-          Multiply by 2
-        </button>
-      </form>
-
-      <div *ngIf="result !== null" style="margin-top: 1rem; padding: 1rem; background-color: #e0ffe0; border: 1px solid #00cc00;">
-        <strong>Result:</strong> {{ result }}
-      </div>
-
-      <div *ngIf="error" style="margin-top: 1rem; padding: 1rem; background-color: #ffe0e0; border: 1px solid #cc0000;">
-        <strong>Error:</strong> {{ error }}
-      </div>
-    </main>
-  `,
+  imports: [FormsModule],
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   number: string = '';
   result: number | null = null;
   error: string | null = null;
+
+  // Configure via environment: defaults to localhost for development
+  private apiUrl = 'http://localhost:8000';
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -50,7 +27,7 @@ export class AppComponent {
     this.result = null;
 
     try {
-      const response = await fetch('http://localhost:8000/api/multiply', {
+      const response = await fetch(`${this.apiUrl}/api/multiply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,12 +39,12 @@ export class AppComponent {
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      const data: MultiplyResponse = await response.json();
       this.result = data.result;
     } catch (err: unknown) {
       this.error = (err as Error).message;
     }
-    
+
     this.cdr.detectChanges();
   }
 }

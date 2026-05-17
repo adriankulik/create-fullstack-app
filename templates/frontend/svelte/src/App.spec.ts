@@ -2,16 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, fireEvent, waitFor } from '@testing-library/svelte/svelte5'
 import App from './App.svelte'
 
-global.fetch = vi.fn(() =>
+globalThis.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ result: 10 }),
-  })
-)
+  } as unknown as Response)
+) as typeof fetch
 
 describe('App', () => {
   beforeEach(() => {
-    fetch.mockClear()
+    (fetch as ReturnType<typeof vi.fn>).mockClear()
   })
 
   it('renders a heading', () => {
@@ -21,15 +21,15 @@ describe('App', () => {
 
   it('submits a number and displays the result', async () => {
     const { getByLabelText, getByText, getByRole } = render(App)
-    
+
     const input = getByLabelText(/Enter a number/i)
     const button = getByRole('button', { name: /Multiply by 2/i })
 
     await fireEvent.input(input, { target: { value: '5' } })
-    await fireEvent.click(button)
+    await fireEvent.submit(button.closest('form')!)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    
+
     await waitFor(() => expect(getByText(/Result:/i)).toBeInTheDocument())
     expect(getByText('10')).toBeInTheDocument()
   })

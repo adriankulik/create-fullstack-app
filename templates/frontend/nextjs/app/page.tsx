@@ -2,10 +2,16 @@
 
 import { useState, FormEvent } from 'react';
 
+interface MultiplyResponse {
+  result: number;
+}
+
 export default function Home() {
   const [number, setNumber] = useState<string>('');
   const [result, setResult] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -13,7 +19,7 @@ export default function Home() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/multiply', {
+      const response = await fetch(`${apiUrl}/api/multiply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +31,7 @@ export default function Home() {
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      const data: MultiplyResponse = await response.json();
       setResult(data.result);
     } catch (err: unknown) {
       setError((err as Error).message);

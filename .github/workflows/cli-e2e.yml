@@ -7,8 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run CLI tests
+        run: npm test
+
   generate-matrix:
     runs-on: ubuntu-latest
+    needs: unit-test
     outputs:
       frontends: ${{ steps.set-matrix.outputs.frontends }}
       backends: ${{ steps.set-matrix.outputs.backends }}
@@ -52,7 +66,6 @@ jobs:
       run: |
         npm install
         npm install -D @playwright/test wait-on
-        cd cli && npm install
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium
@@ -79,11 +92,11 @@ jobs:
         
         # Wait for the frontend to be reachable
         if [ "$FRONTEND" = "nextjs" ]; then
-          npx wait-on http-get://127.0.0.1:3000 -t 60000
+          npx wait-on http-get://localhost:3000 -t 60000
         elif [ "$FRONTEND" = "angular" ]; then
-          npx wait-on http-get://127.0.0.1:4200 -t 60000
+          npx wait-on http-get://localhost:4200 -t 60000
         else
-          npx wait-on http-get://127.0.0.1:5173 -t 60000
+          npx wait-on http-get://localhost:5173 -t 60000
         fi
         
         # Run the Playwright integration test from the root directory

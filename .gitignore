@@ -4,7 +4,7 @@ node_modules/
 venv/
 **/venv/
 .venv/
-**/ .venv/
+**/.venv/
 env/
 **/env/
 
@@ -23,6 +23,7 @@ playwright-report/
 e2e-matrix-temp-app/
 e2e-tests-output/
 **/e2e-tests-output/
+cli-unit-tests-output/
 
 # Angular cache
 .angular/

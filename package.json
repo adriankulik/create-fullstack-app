@@ -27,14 +27,31 @@
     "wait-on": "^9.0.10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run tests/cli.test.js",
+    "test:e2e": "vitest run tests/e2e.test.js",
+    "test:integration": "npx playwright test tests/integration.spec.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adriankulik/create-fullstack-app.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "cli",
+    "scaffold",
+    "fullstack",
+    "react",
+    "nextjs",
+    "angular",
+    "vue",
+    "svelte",
+    "fastapi",
+    "flask",
+    "dotnet",
+    "express",
+    "boilerplate",
+    "starter"
+  ],
+  "author": "Adrian Kulik",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/adriankulik/create-fullstack-app/issues"
