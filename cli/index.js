@@ -203,37 +203,37 @@ async function main() {
         dotnetMajor = 0;
       }
 
-      if (dotnetMajor < 9) {
-        console.log(pc.yellow(`\n  .NET 9 SDK is required but ${dotnetMajor > 0 ? `v${dotnetMajor} was found` : "dotnet was not found"} on your system.`));
+      if (dotnetMajor < 10) {
+        console.log(pc.yellow(`\n  .NET 10 SDK is required but ${dotnetMajor > 0 ? `v${dotnetMajor} was found` : "dotnet was not found"} on your system.`));
 
         if (process.platform === "win32") {
-          console.log(pc.yellow("  Please install the .NET 9 SDK from: https://aka.ms/dotnet/download"));
+          console.log(pc.yellow("  Please install the .NET 10 SDK from: https://aka.ms/dotnet/download"));
         } else {
           const { installDotnet } = await prompts({
             type: "confirm",
             name: "installDotnet",
-            message: "Would you like to install the .NET 9 SDK automatically? (uses the official Microsoft install script)",
+            message: "Would you like to install the .NET 10 SDK automatically? (uses the official Microsoft install script)",
             initial: true,
           });
 
           if (installDotnet) {
-            console.log(pc.cyan("  Installing .NET 9 SDK (this may take a few minutes)..."));
+            console.log(pc.cyan("  Installing .NET 10 SDK (this may take a few minutes)..."));
             try {
               execSync(
-                "curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 9.0",
+                "curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0",
                 { stdio: "inherit" }
               );
               // Make the newly installed dotnet available in the current process without a shell restart
               const dotnetRoot = path.join(os.homedir(), ".dotnet");
               process.env.DOTNET_ROOT = dotnetRoot;
               process.env.PATH = `${dotnetRoot}:${process.env.PATH}`;
-              console.log(pc.green("  .NET 9 SDK installed successfully."));
+              console.log(pc.green("  .NET 10 SDK installed successfully."));
               console.log(pc.yellow(`  Add ${dotnetRoot} to your PATH permanently by updating your shell profile (e.g. ~/.zshrc).`));
             } catch (e) {
               console.log(pc.yellow("  Could not install .NET SDK automatically. Please install it from https://aka.ms/dotnet/download"));
             }
           } else {
-            console.log(pc.yellow("  Skipping .NET SDK installation. Please install .NET 9 SDK from https://aka.ms/dotnet/download"));
+            console.log(pc.yellow("  Skipping .NET SDK installation. Please install .NET 10 SDK from https://aka.ms/dotnet/download"));
           }
         }
       }
@@ -244,7 +244,7 @@ async function main() {
       } catch (e) {
         console.log(
           pc.yellow(
-            "  Could not restore .NET dependencies automatically. Please make sure .NET 9 SDK is installed and in your PATH.",
+            "  Could not restore .NET dependencies automatically. Please make sure .NET 10 SDK is installed and in your PATH.",
           ),
         );
       }
