@@ -2,6 +2,7 @@
 
 [![NPM Downloads](https://img.shields.io/npm/dy/@adriankulik/create-fullstack-app)](https://www.npmjs.com/package/@adriankulik/create-fullstack-app)
 
+![create-fullstack-app showcase](https://raw.githubusercontent.com/adriankulik/create-fullstack-app/assets-v1/assets/showcase.gif)
 
 A CLI tool for scaffolding a full-stack web application with your choice of frontend and backend technologies. The generated projects use `npm ci` and pinned Python dependencies to ensure fully deterministic and reproducible installations.
 
