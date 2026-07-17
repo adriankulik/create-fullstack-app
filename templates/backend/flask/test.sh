@@ -2,7 +2,7 @@
 set -e
 if [ -d "venv" ]; then
     source venv/bin/activate
-    pytest
+    python -m pytest
 else
-    pytest
+    python3 -m pytest
 fi

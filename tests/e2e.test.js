@@ -16,10 +16,10 @@ const BACKENDS = ['fastapi', 'flask', 'dotnet', 'nodejs'];
 describe('CLI End-to-End Tests', () => {
   beforeAll(() => {
     if (fs.existsSync(TEST_ROOT)) {
-      fs.removeSync(TEST_ROOT);
+      fs.rmSync(TEST_ROOT, { recursive: true, force: true });
     }
     fs.mkdirSync(TEST_ROOT);
-  });
+  }, 60000);
 
   for (const frontend of FRONTENDS) {
     for (const backend of BACKENDS) {

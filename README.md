@@ -35,7 +35,7 @@ You will be prompted to choose a project name, your preferred frontend, and back
   - Vue (v3.5.33)
   - Svelte (v5.55.5)
 - **Backend Options**:
-  - FastAPI (v0.136.1)
+  - FastAPI (v0.115.11)
   - Flask (v3.1.3)
   - .NET (v9.0.16)
   - Node.js Express (v4.22.2)
