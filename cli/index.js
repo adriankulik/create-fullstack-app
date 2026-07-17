@@ -187,11 +187,12 @@ async function main() {
           stdio: "inherit",
         });
       } catch (e) {
-        console.log(
-          pc.yellow(
-            "  Could not set up Python virtual environment automatically. Please set it up manually.",
+        console.error(
+          pc.red(
+            "  Failed to set up Python virtual environment or install dependencies.",
           ),
         );
+        process.exit(1);
       }
     } else if (backend === "dotnet") {
       // Check if .NET 9+ SDK is available
