@@ -27,6 +27,7 @@
     "wait-on": "^9.0.10"
   },
   "scripts": {
+    "prepublishOnly": "echo \"module.exports = '$(date -u +\"%Y-%m-%d %H:%M:%S\")';\" > cli/build-date.js",
     "test": "echo \"No unit tests specified\" && exit 0",
     "test:e2e": "vitest run tests/e2e.test.js",
     "test:integration": "npx playwright test tests/integration.spec.js"

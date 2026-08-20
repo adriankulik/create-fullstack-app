@@ -8,9 +8,15 @@ const os = require("os");
 const { execSync } = require("child_process");
 
 async function main() {
+  const pkg = require("../package.json");
+  let publishDate = "Local build";
+  try {
+    publishDate = require("./build-date.js") + " (UTC)";
+  } catch (e) {}
+
   const { asciiArt } = require("./logo");
   console.log(pc.cyan(asciiArt));
-  console.log(pc.cyan("\nWelcome to create-fullstack-app!\n"));
+  console.log(pc.cyan(`\nWelcome to create-fullstack-app! (v${pkg.version}, published on ${publishDate})\n`));
 
   // Simple argument parsing
   const args = process.argv.slice(2);
