@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface MultiplyResponse {
@@ -12,14 +12,14 @@ interface MultiplyResponse {
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  number: string = '';
+  number = '';
   result: number | null = null;
   error: string | null = null;
 
   // Configure via environment: defaults to localhost for development
   private apiUrl = 'http://localhost:8000';
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  private cdr = inject(ChangeDetectorRef);
 
   async handleSubmit(event: Event) {
     event.preventDefault();
