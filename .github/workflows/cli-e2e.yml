@@ -147,3 +147,14 @@ jobs:
         # Run the Playwright integration test from the root directory
         cd ..
         npx playwright test tests/integration.spec.js --project=chromium
+
+  auto-merge:
+    needs: e2e
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feat/update-frameworks')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Merge PR
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: gh pr merge ${{ github.event.pull_request.number }} --squash --admin
