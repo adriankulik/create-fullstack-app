@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -68,21 +68,70 @@ jobs:
             fi
           done
 
+      - name: Update Hardcoded Versions in UI (README & CLI)
+        run: |
+          cat << 'EOF' > update-ui.js
+          const fs = require('fs');
+          const path = require('path');
+          
+          function getVer(file, jsonPath, isDev = false) {
+            try {
+              const content = fs.readFileSync(file, 'utf8');
+              if (file.endsWith('.json')) {
+                const json = JSON.parse(content);
+                const deps = isDev ? json.devDependencies : json.dependencies;
+                return deps[jsonPath].replace(/[\^~]/g, '');
+              } else if (file.endsWith('.txt')) {
+                const match = content.match(new RegExp(`^${jsonPath}==(.*)$`, 'im'));
+                return match ? match[1].trim() : null;
+              } else if (file.endsWith('.csproj')) {
+                const match = content.match(new RegExp(`Include="${jsonPath}"[^>]*Version="([^"]+)"`));
+                return match ? match[1] : null;
+              }
+            } catch (e) { return null; }
+          }
+          
+          const versions = {
+            'Next.js': getVer('templates/frontend/nextjs/package.json', 'next'),
+            'Angular': getVer('templates/frontend/angular/package.json', '@angular/core'),
+            'Vue': getVer('templates/frontend/vue/package.json', 'vue'),
+            'Svelte': getVer('templates/frontend/svelte/package.json', 'svelte', true),
+            'FastAPI': getVer('templates/backend/fastapi/requirements.txt', 'fastapi'),
+            'Flask': getVer('templates/backend/flask/requirements.txt', 'Flask'),
+            '.NET': getVer('templates/backend/dotnet/Tests/Tests.csproj', 'Microsoft.AspNetCore.Mvc.Testing'),
+            'Node.js Express': getVer('templates/backend/nodejs/package.json', 'express')
+          };
+          
+          for (const file of ['README.md', 'cli/index.js']) {
+            let content = fs.readFileSync(file, 'utf8');
+            for (const [framework, version] of Object.entries(versions)) {
+              if (!version) continue;
+              // Escape dot in framework for regex
+              const safeFramework = framework.replace(/\./g, '\\.');
+              // Match "Framework (vX.X.X)" and replace
+              const regex = new RegExp(`(${safeFramework}\\s*\\(v)[0-9.]+([^)]*\\))`, 'g');
+              content = content.replace(regex, `$1${version}$2`);
+            }
+            fs.writeFileSync(file, content);
+          }
+          EOF
+          node update-ui.js
+          rm update-ui.js
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           # A PAT (Personal Access Token) is recommended to trigger other workflows (like the E2E tests).
           # If a PAT is not available, GITHUB_TOKEN is used, but it won't trigger PR CI automatically.
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update framework versions"
-          title: "chore: update framework versions"
+          commit-message: "feat: update framework versions"
+          title: "feat: update framework versions"
           body: |
             Automated PR to update framework versions to their latest releases.
             
             This PR was automatically created by a GitHub Action. Tests are expected to run and, if successful, the PR will be auto-merged.
-          branch: "chore/update-frameworks"
+          branch: "feat/update-frameworks"
           delete-branch: true
 
       - name: Enable Pull Request Auto-merge

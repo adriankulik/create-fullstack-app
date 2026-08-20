@@ -99,7 +99,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24'
 
     - name: Set up .NET
       if: matrix.backend == 'dotnet'
