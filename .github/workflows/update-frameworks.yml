@@ -38,8 +38,9 @@ jobs:
 
       - name: Update Root and CLI dependencies
         run: |
-          ncu -u
-          npm install --package-lock-only 
+          npm ci || npm install
+          ncu -u --peer
+          npm install --package-lock-only
           
       - name: Update Frontend Templates
         run: |
@@ -48,9 +49,9 @@ jobs:
               echo "Updating frontend template: $dir"
               (
                 cd "$dir"
-                ncu -u --target minor --filter "typescript,eslint,eslint-*,@typescript-eslint/*,@angular-eslint/*,vue-eslint-parser"
-                ncu -u --reject "typescript,eslint,eslint-*,@typescript-eslint/*,@angular-eslint/*,vue-eslint-parser"
-                npm install --package-lock-only 
+                npm ci || npm install
+                ncu -u --peer
+                npm install --package-lock-only
               )
             fi
           done
@@ -63,9 +64,9 @@ jobs:
               if [ -f "$dir/package.json" ]; then
                 (
                   cd "$dir"
-                  ncu -u --target minor --filter "typescript,eslint,eslint-*,@typescript-eslint/*,@angular-eslint/*,vue-eslint-parser"
-                  ncu -u --reject "typescript,eslint,eslint-*,@typescript-eslint/*,@angular-eslint/*,vue-eslint-parser"
-                  npm install --package-lock-only 
+                  npm ci || npm install
+                  ncu -u --peer
+                  npm install --package-lock-only
                 )
               fi
               if [ -f "$dir/requirements.txt" ]; then
