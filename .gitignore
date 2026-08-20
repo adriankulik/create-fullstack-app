@@ -48,3 +48,4 @@ obj/
 .vs/
 **/.vs/
 
+cli/build-date.js
