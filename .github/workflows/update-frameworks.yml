@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -68,21 +68,20 @@ jobs:
             fi
           done
 
-
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           # A PAT (Personal Access Token) is recommended to trigger other workflows (like the E2E tests).
           # If a PAT is not available, GITHUB_TOKEN is used, but it won't trigger PR CI automatically.
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update framework versions"
-          title: "chore: update framework versions"
+          commit-message: "feat: update framework versions"
+          title: "feat: update framework versions"
           body: |
             Automated PR to update framework versions to their latest releases.
             
             This PR was automatically created by a GitHub Action. Tests are expected to run and, if successful, the PR will be auto-merged.
-          branch: "chore/update-frameworks"
+          branch: "feat/update-frameworks"
           delete-branch: true
 
       - name: Enable Pull Request Auto-merge
