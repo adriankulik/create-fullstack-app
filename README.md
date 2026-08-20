@@ -30,15 +30,15 @@ You will be prompted to choose a project name, your preferred frontend, and back
 ## Features
 
 - **Frontend Options**:
-  - Next.js (v16.2.6)
-  - Angular (v21.0.0) - _Configured with Zone.js_
-  - Vue (v3.5.33)
-  - Svelte (v5.55.7)
+  - Next.js (v16.3.1)
+  - Angular (v22.1.3) - _Configured with Zone.js_
+  - Vue (v3.5.41)
+  - Svelte (v5.56.10)
 - **Backend Options**:
-  - FastAPI (v0.115.11)
+  - FastAPI (v0.141.1)
   - Flask (v3.1.3)
-  - .NET (v9.0.0)
-  - Node.js Express (v4.22.2)
+  - .NET (v10.0.11)
+  - Node.js Express (v5.2.1)
 - **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.
 - **CI/CD Ready**: Includes a pre-configured `.github/workflows/cli-e2e.yml` that tests both ends. _Tip: To enforce this, enable branch protection in your GitHub repository settings and require the "test" status check to pass._
