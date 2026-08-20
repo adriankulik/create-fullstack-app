@@ -30,14 +30,14 @@ You will be prompted to choose a project name, your preferred frontend, and back
 ## Features
 
 - **Frontend Options**:
-  - Next.js (v16.2.4)
+  - Next.js (v16.2.6)
   - Angular (v21.0.0) - _Configured with Zone.js_
   - Vue (v3.5.33)
-  - Svelte (v5.55.5)
+  - Svelte (v5.55.7)
 - **Backend Options**:
   - FastAPI (v0.115.11)
   - Flask (v3.1.3)
-  - .NET (v9.0.16)
+  - .NET (v9.0.0)
   - Node.js Express (v4.22.2)
 - **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.

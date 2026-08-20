@@ -41,19 +41,19 @@ async function main() {
       name: "frontend",
       message: "Which frontend framework would you like to use?",
       choices: [
-        { title: "Next.js", value: "nextjs", description: "React framework" },
+        { title: "Next.js (v16.2.6)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular",
+          title: "Angular (v21.0.0)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
         {
-          title: "Vue",
+          title: "Vue (v3.5.33)",
           value: "vue",
           description: "Progressive JavaScript framework",
         },
         {
-          title: "Svelte",
+          title: "Svelte (v5.55.7)",
           value: "svelte",
           description: "Cybernetically enhanced web apps",
         },
@@ -69,22 +69,22 @@ async function main() {
       message: "Which backend framework would you like to use?",
       choices: [
         {
-          title: "FastAPI",
+          title: "FastAPI (v0.115.11)",
           value: "fastapi",
           description: "Modern, fast Python web framework",
         },
         {
-          title: "Flask",
+          title: "Flask (v3.1.3)",
           value: "flask",
           description: "Lightweight Python WSGI web application framework",
         },
         {
-          title: ".NET",
+          title: ".NET (v9.0.0)",
           value: "dotnet",
           description: "Robust, C#, high-performance framework by Microsoft",
         },
         {
-          title: "Node.js (Express)",
+          title: "Node.js Express (v4.22.2)",
           value: "nodejs",
           description: "Minimalist web framework for Node.js",
         },
