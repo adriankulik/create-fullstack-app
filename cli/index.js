@@ -165,7 +165,7 @@ async function main() {
 
     // Frontend installation
     console.log(pc.cyan("  Installing frontend dependencies..."));
-    execSync("npm ci", { cwd: targetFrontend, stdio: "inherit" });
+    execSync("npm install --no-audit --no-fund --legacy-peer-deps", { cwd: targetFrontend, stdio: "inherit" });
 
     if (backend === "fastapi" || backend === "flask") {
       console.log(pc.cyan("  Setting up backend virtual environment..."));
@@ -251,7 +251,7 @@ async function main() {
       }
     } else if (backend === "nodejs") {
       console.log(pc.cyan("  Installing Node.js backend dependencies..."));
-      execSync("npm ci", { cwd: targetBackend, stdio: "inherit" });
+      execSync("npm install --no-audit --no-fund --legacy-peer-deps", { cwd: targetBackend, stdio: "inherit" });
     }
 
     // 7. Initialize Git repository

@@ -39,14 +39,14 @@ jobs:
       - name: Update Root and CLI dependencies
         run: |
           ncu -u
-          npm install
+          npm install --package-lock-only --legacy-peer-deps
           
       - name: Update Frontend Templates
         run: |
           for dir in templates/frontend/*; do
             if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
               echo "Updating frontend template: $dir"
-              (cd "$dir" && ncu -u)
+              (cd "$dir" && ncu -u && npm install --package-lock-only --legacy-peer-deps)
             fi
           done
 
@@ -56,7 +56,7 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Updating backend template: $dir"
               if [ -f "$dir/package.json" ]; then
-                (cd "$dir" && ncu -u)
+                (cd "$dir" && ncu -u && npm install --package-lock-only --legacy-peer-deps)
               fi
               if [ -f "$dir/requirements.txt" ]; then
                 (cd "$dir" && pur -r requirements.txt)
