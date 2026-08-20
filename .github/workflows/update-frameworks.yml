@@ -1,0 +1,94 @@
+name: Update Framework Versions
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly at midnight on Sunday
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install update tools
+        run: |
+          npm install -g npm-check-updates
+          pip install pur
+          dotnet tool install -g dotnet-outdated-tool || true
+
+      - name: Update Root and CLI dependencies
+        run: |
+          ncu -u
+          npm install
+          
+      - name: Update Frontend Templates
+        run: |
+          for dir in templates/frontend/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Updating frontend template: $dir"
+              (cd "$dir" && ncu -u)
+            fi
+          done
+
+      - name: Update Backend Templates
+        run: |
+          for dir in templates/backend/*; do
+            if [ -d "$dir" ]; then
+              echo "Updating backend template: $dir"
+              if [ -f "$dir/package.json" ]; then
+                (cd "$dir" && ncu -u)
+              fi
+              if [ -f "$dir/requirements.txt" ]; then
+                (cd "$dir" && pur -r requirements.txt)
+              fi
+              # Check for any .csproj files to update .NET templates
+              if ls "$dir"/*.csproj 1> /dev/null 2>&1; then
+                (cd "$dir" && dotnet outdated -u)
+              fi
+            fi
+          done
+
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          # A PAT (Personal Access Token) is recommended to trigger other workflows (like the E2E tests).
+          # If a PAT is not available, GITHUB_TOKEN is used, but it won't trigger PR CI automatically.
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update framework versions"
+          title: "chore: update framework versions"
+          body: |
+            Automated PR to update framework versions to their latest releases.
+            
+            This PR was automatically created by a GitHub Action. Tests are expected to run and, if successful, the PR will be auto-merged.
+          branch: "chore/update-frameworks"
+          delete-branch: true
+
+      - name: Enable Pull Request Auto-merge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        env:
+          # Make sure auto-merge is enabled in repository settings
+          GH_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.cpr.outputs.pull-request-number }}" --auto --squash || echo "Could not enable auto-merge. Make sure 'Allow auto-merge' is enabled in repo settings."

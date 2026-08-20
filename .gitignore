@@ -39,3 +39,12 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# .NET
+bin/
+**/bin/
+obj/
+**/obj/
+.vs/
+**/.vs/
+
