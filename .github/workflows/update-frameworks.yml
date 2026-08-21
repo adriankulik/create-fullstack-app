@@ -39,7 +39,7 @@ jobs:
       - name: Update Root and CLI dependencies
         run: |
           npm ci || npm install
-          ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript"
+          ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript,eslint"
           npm install --package-lock-only
           
       - name: Update Frontend Templates
@@ -50,7 +50,7 @@ jobs:
               (
                 cd "$dir"
                 npm ci || npm install
-                ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript"
+                ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript,eslint"
                 npm install --package-lock-only
               )
             fi
@@ -65,7 +65,7 @@ jobs:
                 (
                   cd "$dir"
                   npm ci || npm install
-                  ncu -u --peer --reject "typescript"
+                  ncu -u --peer --reject "typescript,eslint"
                   npm install --package-lock-only
                 )
               fi
