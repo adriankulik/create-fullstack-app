@@ -17,12 +17,14 @@ chmod +x *.sh
 ```
 
 ### Running the App
-
-To start both the frontend and backend development servers, simply run:
-
+  
+To start the database, backend, and frontend development servers, simply run:
+  
 ```bash
 ./start.sh
 ```
+
+**Database Note:** The `start.sh` script will automatically spin up a **PostgreSQL (v15)** database using Docker Compose, and it will run **Alembic (v1.16.5)** (using SQLAlchemy v2.0.52 and Psycopg2 v2.9.12) to handle migrations before starting the rest of your app.
 
 ### Testing and Linting
 

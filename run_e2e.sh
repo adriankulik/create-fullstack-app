@@ -8,6 +8,9 @@ export DOTNET_ROOT="$HOME/.dotnet"
 cleanup() {
   echo "Cleaning up lingering servers..."
   lsof -ti:8000,3000,4200,5173 | xargs kill -9 >/dev/null 2>&1 || true
+  if [ -d "$TEST_APP_DIR" ]; then
+    (cd $TEST_APP_DIR && docker compose down -v >/dev/null 2>&1 || true)
+  fi
 }
 trap cleanup EXIT
 
@@ -76,6 +79,7 @@ for frontend in "${FRONTENDS[@]}"; do
     lsof -ti:8000 | xargs kill -9 >/dev/null 2>&1 || true
     lsof -ti:$PORT | xargs kill -9 >/dev/null 2>&1 || true
     kill -9 $START_PID >/dev/null 2>&1 || true
+    (cd $TEST_APP_DIR && docker compose down -v >/dev/null 2>&1 || true)
 
     echo "Cleaning up directory..."
     sleep 1

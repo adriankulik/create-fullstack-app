@@ -56,6 +56,12 @@ jobs:
             fi
           done
 
+- name: Update Database Dependencies
+        run: |
+          if [ -f "templates/base/database/requirements.txt" ]; then
+            (cd templates/base/database && pur -r requirements.txt)
+          fi
+
       - name: Update Backend Templates
         run: |
           for dir in templates/backend/*; do
@@ -110,7 +116,10 @@ jobs:
             'FastAPI': getVer('templates/backend/fastapi/requirements.txt', 'fastapi'),
             'Flask': getVer('templates/backend/flask/requirements.txt', 'Flask'),
             '.NET': getVer('templates/backend/dotnet/Tests/Tests.csproj', 'Microsoft.AspNetCore.Mvc.Testing'),
-            'Node.js Express': getVer('templates/backend/nodejs/package.json', 'express')
+            'Node.js Express': getVer('templates/backend/nodejs/package.json', 'express'),
+            'Alembic': getVer('templates/base/database/requirements.txt', 'alembic'),
+            'SQLAlchemy': getVer('templates/base/database/requirements.txt', 'SQLAlchemy'),
+            'Psycopg2': getVer('templates/base/database/requirements.txt', 'psycopg2-binary')
           };
           
           for (const file of ['README.md', 'cli/index.js']) {

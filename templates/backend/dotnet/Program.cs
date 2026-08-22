@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +16,26 @@ var app = builder.Build();
 
 app.UseCors();
 
-app.MapPost("/api/multiply", ([FromBody] MultiplyRequest request) =>
+var dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL") ?? "postgresql://user:password@localhost:5432/appdb";
+
+app.MapPost("/api/multiply", async ([FromBody] MultiplyRequest request) =>
 {
-    return new { result = request.Number * 2 };
+    var result = request.Number * 2;
+    try
+    {
+        await using var dataSource = NpgsqlDataSource.Create(dbUrl);
+        await using var cmd = dataSource.CreateCommand("INSERT INTO calculations (input_number, result) VALUES ($1, $2)");
+        cmd.Parameters.AddWithValue(request.Number);
+        cmd.Parameters.AddWithValue(result);
+        await cmd.ExecuteNonQueryAsync();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"Error saving to db: {e.Message}");
+    }
+    
+    return new { result };
 });
-
-
 
 app.Run("http://localhost:8000");
 
