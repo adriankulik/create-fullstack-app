@@ -38,6 +38,6 @@ def multiply_number(request: MultiplyRequest):
     result = request.number * 2
     try:
         save_calculation(request.number, result)
-    except Exception as e:
+    except psycopg2.Error as e:
         print(f"Error saving to db: {e}")
     return MultiplyResponse(result=result)

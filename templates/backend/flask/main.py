@@ -30,7 +30,7 @@ def multiply_number():
         result = number * 2
         try:
             save_calculation(number, result)
-        except Exception as e:
+        except psycopg2.Error as e:
             print(f"Error saving to db: {e}")
         return jsonify({"result": result})
     except ValueError:
