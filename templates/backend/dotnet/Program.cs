@@ -16,7 +16,7 @@ var app = builder.Build();
 
 app.UseCors();
 
-var dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL") ?? "postgresql://user:password@localhost:5432/appdb";
+var dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL") ?? "postgresql://user:password@127.0.0.1:5432/appdb";
 var connStr = dbUrl;
 if (dbUrl.StartsWith("postgres://") || dbUrl.StartsWith("postgresql://"))
 {
@@ -44,7 +44,7 @@ app.MapPost("/api/multiply", async ([FromBody] MultiplyRequest request) =>
     return new { result };
 });
 
-app.Run("http://localhost:8000");
+app.Run("http://127.0.0.1:8000");
 
 class MultiplyRequest
 {

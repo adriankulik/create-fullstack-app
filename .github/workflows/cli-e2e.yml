@@ -136,13 +136,17 @@ jobs:
         npx wait-on tcp:8000 -t 120000
         
         # Wait for the frontend to be reachable
-        if [ "$FRONTEND" = "nextjs" ]; then
-          npx wait-on http-get://localhost:3000 -t 120000
-        elif [ "$FRONTEND" = "angular" ]; then
-          npx wait-on http-get://localhost:4200 -t 120000
-        else
-          npx wait-on http-get://localhost:5173 -t 120000
-        fi
+        case "$FRONTEND" in
+        nextjs)
+          npx wait-on http-get://127.0.0.1:3000 -t 120000
+          ;;
+        angular)
+          npx wait-on http-get://127.0.0.1:4200 -t 120000
+          ;;
+        *)
+          npx wait-on http-get://127.0.0.1:5173 -t 120000
+          ;;
+        esac
         
         # Run the Playwright integration test from the root directory
         cd ..

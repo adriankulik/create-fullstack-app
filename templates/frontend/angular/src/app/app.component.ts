@@ -16,8 +16,8 @@ export class AppComponent {
   result: number | null = null;
   error: string | null = null;
 
-  // Configure via environment: defaults to localhost for development
-  private apiUrl = 'http://localhost:8000';
+  // Configure via environment: defaults to 127.0.0.1 for development
+  private apiUrl = 'http://127.0.0.1:8000';
 
   private cdr = inject(ChangeDetectorRef);
 

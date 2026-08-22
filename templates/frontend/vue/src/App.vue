@@ -9,7 +9,7 @@ const number = ref<string>('')
 const result = ref<number | null>(null)
 const error = ref<string | null>(null)
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const handleSubmit = async () => {
   error.value = null
