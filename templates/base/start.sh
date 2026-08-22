@@ -14,7 +14,7 @@ echo "Running Database Migrations (Alembic)..."
   pip install -r requirements.txt
   
   echo "Waiting for PostgreSQL to be ready..."
-  for i in {1..30}; do
+  for i in {1..60}; do
     if alembic current >/dev/null 2>&1; then
       break
     fi
