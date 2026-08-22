@@ -117,6 +117,7 @@ async function main() {
   }
 
   console.log(pc.blue(`\nScaffolding project in ${targetDir}...`));
+  console.log(pc.blue(`Configuring PostgreSQL (v15) database with Alembic, SQLAlchemy, and Psycopg2...`));
 
   // Determine paths to templates relative to the CLI script
   const templatesDir = path.resolve(__dirname, "../templates");
@@ -195,8 +196,23 @@ async function main() {
       } catch (e) {
         console.error(
           pc.red(
-            "  Failed to set up Python virtual environment or install dependencies.",
-          ),
+            "\n  Failed to set up Python virtual environment or install dependencies."
+          )
+        );
+        console.error(
+          pc.yellow(
+            "  TIP: We frequently update templates to use the latest framework versions."
+          )
+        );
+        console.error(
+          pc.yellow(
+            "  If pip failed to find a matching version, your default 'python3' version might be too old."
+          )
+        );
+        console.error(
+          pc.yellow(
+            "  Please try updating to the newest version of Python and run this again."
+          )
         );
         process.exit(1);
       }

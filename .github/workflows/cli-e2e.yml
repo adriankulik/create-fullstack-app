@@ -133,20 +133,24 @@ jobs:
         nohup ./start.sh > start.log 2>&1 &
         
         # Wait for the backend to be healthy
-        npx wait-on tcp:8000 -t 60000
+        npx wait-on tcp:8000 -t 120000
         
         # Wait for the frontend to be reachable
         if [ "$FRONTEND" = "nextjs" ]; then
-          npx wait-on http-get://localhost:3000 -t 60000
+          npx wait-on http-get://localhost:3000 -t 120000
         elif [ "$FRONTEND" = "angular" ]; then
-          npx wait-on http-get://localhost:4200 -t 60000
+          npx wait-on http-get://localhost:4200 -t 120000
         else
-          npx wait-on http-get://localhost:5173 -t 60000
+          npx wait-on http-get://localhost:5173 -t 120000
         fi
         
         # Run the Playwright integration test from the root directory
         cd ..
         npx playwright test tests/integration.spec.js --project=chromium
+
+    - name: Print start.log on failure
+      if: failure()
+      run: cat test-app/start.log || true
 
   auto-merge:
     needs: e2e
