@@ -148,6 +148,10 @@ jobs:
         cd ..
         npx playwright test tests/integration.spec.js --project=chromium
 
+    - name: Print start.log on failure
+      if: failure()
+      run: cat test-app/start.log || true
+
   auto-merge:
     needs: e2e
     runs-on: ubuntu-latest
