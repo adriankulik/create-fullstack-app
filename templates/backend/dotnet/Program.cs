@@ -17,16 +17,23 @@ var app = builder.Build();
 app.UseCors();
 
 var dbUrl = Environment.GetEnvironmentVariable("DATABASE_URL") ?? "postgresql://user:password@localhost:5432/appdb";
+var connStr = dbUrl;
+if (dbUrl.StartsWith("postgres://") || dbUrl.StartsWith("postgresql://"))
+{
+    var uri = new Uri(dbUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    connStr = $"Host={uri.Host};Port={uri.Port};Username={userInfo[0]};Password={userInfo[1]};Database={uri.LocalPath.Substring(1)}";
+}
 
 app.MapPost("/api/multiply", async ([FromBody] MultiplyRequest request) =>
 {
     var result = request.Number * 2;
     try
     {
-        await using var dataSource = NpgsqlDataSource.Create(dbUrl);
-        await using var cmd = dataSource.CreateCommand("INSERT INTO calculations (input_number, result) VALUES ($1, $2)");
-        cmd.Parameters.AddWithValue(request.Number);
-        cmd.Parameters.AddWithValue(result);
+        await using var dataSource = NpgsqlDataSource.Create(connStr);
+        await using var cmd = dataSource.CreateCommand("INSERT INTO calculations (input_number, result) VALUES (@input_number, @result)");
+        cmd.Parameters.AddWithValue("input_number", request.Number);
+        cmd.Parameters.AddWithValue("result", result);
         await cmd.ExecuteNonQueryAsync();
     }
     catch (Exception e)
