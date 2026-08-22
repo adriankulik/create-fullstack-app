@@ -39,7 +39,7 @@ You will be prompted to choose a project name, your preferred frontend, and back
   - Flask (v3.1.3)
   - .NET (v10.0.11)
   - Node.js Express (v5.2.1)
-- **Database**: PostgreSQL (v15) with Alembic (v1.16.5), SQLAlchemy (v2.0.52), and Psycopg2 (v2.9.12).
+- **Database**: PostgreSQL (v15) with Alembic (v1.19.1), SQLAlchemy (v2.0.52), and Psycopg2 (v2.9.12).
 - **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.
 - **CI/CD Ready**: Includes a pre-configured `.github/workflows/cli-e2e.yml` that tests both ends. _Tip: To enforce this, enable branch protection in your GitHub repository settings and require the "test" status check to pass._
