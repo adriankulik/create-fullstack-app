@@ -56,7 +56,7 @@ jobs:
             fi
           done
 
-- name: Update Database Dependencies
+      - name: Update Database Dependencies
         run: |
           if [ -f "templates/base/database/requirements.txt" ]; then
             (cd templates/base/database && pur -r requirements.txt)
