@@ -67,8 +67,8 @@ for frontend in "${FRONTENDS[@]}"; do
       PORT=5173
     fi
 
-    echo "Waiting for frontend on http://localhost:$PORT..."
-    npx wait-on http-get://localhost:$PORT -t 120000
+    echo "Waiting for frontend on http://127.0.0.1:$PORT..."
+    npx wait-on http-get://127.0.0.1:$PORT -t 120000
 
     echo "Running Playwright integration test..."
     FRONTEND=$frontend npx playwright test tests/integration.spec.js --project=chromium

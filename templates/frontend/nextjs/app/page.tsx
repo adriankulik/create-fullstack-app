@@ -11,7 +11,7 @@ export default function Home() {
   const [result, setResult] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

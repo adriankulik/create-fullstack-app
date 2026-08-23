@@ -7,7 +7,7 @@ test('End-to-End Integration Test', async ({ page }) => {
   if (frontend === 'angular') port = 4200;
   if (frontend === 'vue' || frontend === 'svelte') port = 5173;
 
-  const url = `http://localhost:${port}`;
+  const url = `http://127.0.0.1:${port}`;
   
   // Navigate to the frontend app
   await page.goto(url, { waitUntil: 'networkidle' });
@@ -32,7 +32,7 @@ test('End-to-End Integration Test', async ({ page }) => {
 
   // Verify the result is stored in the database
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/appdb'
+    connectionString: process.env.DATABASE_URL || 'postgresql://user:password@127.0.0.1:5432/appdb'
   });
   
   const dbResult = await pool.query('SELECT * FROM calculations WHERE input_number = $1 ORDER BY id DESC LIMIT 1', [randomNumber]);

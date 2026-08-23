@@ -20,7 +20,7 @@ class MultiplyRequest(BaseModel):
 class MultiplyResponse(BaseModel):
     result: float
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/appdb")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@127.0.0.1:5432/appdb")
 
 def save_calculation(number: float, result: float):
     conn = psycopg2.connect(DATABASE_URL)

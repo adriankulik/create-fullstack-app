@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/appdb'
+  connectionString: process.env.DATABASE_URL || 'postgresql://user:password@127.0.0.1:5432/appdb'
 });
 
 app.post('/api/multiply', async (req: Request, res: Response) => {

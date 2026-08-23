@@ -30,7 +30,7 @@ describe('Home', () => {
     fireEvent.click(button);
 
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://localhost:8000/api/multiply', expect.any(Object));
+    expect(fetch).toHaveBeenCalledWith('http://127.0.0.1:8000/api/multiply', expect.any(Object));
 
     const result = await waitFor(() => screen.getByText(/Result:/i));
     expect(result).toBeInTheDocument();
