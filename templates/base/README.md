@@ -24,7 +24,7 @@ To start the database, backend, and frontend development servers, simply run:
 ./start.sh
 ```
 
-**Database Note:** The `start.sh` script will automatically spin up a **PostgreSQL (v15)** database using Docker Compose, and it will run **Alembic (v1.16.5)** (using SQLAlchemy v2.0.52 and Psycopg2 v2.9.12) to handle migrations before starting the rest of your app.
+**Database Note:** The `start.sh` script will automatically spin up a **PostgreSQL (v15)** database using Docker Compose, and it will run **Alembic (v1.19.1)** (using SQLAlchemy v2.0.52 and Psycopg2 v2.9.12) to handle migrations before starting the rest of your app.
 
 ### Testing and Linting
 
@@ -47,5 +47,10 @@ This repository is optimized for development with AI agents:
 
 <details>
 <summary>Included Agent Skills</summary>
-<p>senior-frontend, senior-qa, senior-fullstack, accessibility-general</p>
+<ul>
+  <li><b>senior-frontend</b>: Includes scripts for component generation, frontend scaffolding, and bundle analysis.</li>
+  <li><b>senior-fullstack</b>: Provides tools for fullstack scaffolding, project setup, and code quality analysis.</li>
+  <li><b>senior-qa</b>: Contains utilities for test suite generation, E2E test scaffolding, and coverage analysis.</li>
+  <li><b>accessibility-general</b>: Guidelines and tools for ensuring WCAG 2.2 accessibility compliance.</li>
+</ul>
 </details>
