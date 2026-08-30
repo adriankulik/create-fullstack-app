@@ -47,19 +47,19 @@ async function main() {
       name: "frontend",
       message: "Which frontend framework would you like to use?",
       choices: [
-        { title: "Next.js (v16.3.2)", value: "nextjs", description: "React framework" },
+        { title: "Next.js (v16.3.3)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular (v22.1.3)",
+          title: "Angular (v22.1.4)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
         {
-          title: "Vue (v3.5.41)",
+          title: "Vue (v3.5.42)",
           value: "vue",
           description: "Progressive JavaScript framework",
         },
         {
-          title: "Svelte (v5.56.10)",
+          title: "Svelte (v5.57.0)",
           value: "svelte",
           description: "Cybernetically enhanced web apps",
         },
