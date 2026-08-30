@@ -40,7 +40,7 @@ jobs:
         run: |
           npm ci || npm install
           ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript,eslint"
-          npm install --package-lock-only
+          npm install --package-lock-only --legacy-peer-deps
           
       - name: Update Frontend Templates
         run: |
@@ -51,7 +51,7 @@ jobs:
                 cd "$dir"
                 npm ci || npm install
                 ncu -u --peer --reject "jasmine-core,@types/jasmine,typescript,eslint"
-                npm install --package-lock-only
+                npm install --package-lock-only --legacy-peer-deps
               )
             fi
           done
@@ -72,7 +72,7 @@ jobs:
                   cd "$dir"
                   npm ci || npm install
                   ncu -u --peer --reject "typescript,eslint"
-                  npm install --package-lock-only
+                  npm install --package-lock-only --legacy-peer-deps
                 )
               fi
               if [ -f "$dir/requirements.txt" ]; then
