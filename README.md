@@ -30,10 +30,10 @@ You will be prompted to choose a project name, your preferred frontend, and back
 ## Features
 
 - **Frontend Options**:
-  - Next.js (v16.3.2)
-  - Angular (v22.1.3) - _Configured with Zone.js_
-  - Vue (v3.5.41)
-  - Svelte (v5.56.10)
+  - Next.js (v16.3.3)
+  - Angular (v22.1.4) - _Configured with Zone.js_
+  - Vue (v3.5.42)
+  - Svelte (v5.57.0)
 - **Backend Options**:
   - FastAPI (v0.141.1)
   - Flask (v3.1.3)
