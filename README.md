@@ -30,8 +30,8 @@ You will be prompted to choose a project name, your preferred frontend, and back
 ## Features
 
 - **Frontend Options**:
-  - Next.js (v16.3.3)
-  - Angular (v22.1.4) - _Configured with Zone.js_
+  - Next.js (v16.3.4)
+  - Angular (v22.1.5) - _Configured with Zone.js_
   - Vue (v3.5.42)
   - Svelte (v5.57.0)
 - **Backend Options**:
@@ -40,7 +40,7 @@ You will be prompted to choose a project name, your preferred frontend, and back
   - .NET (v10.0.11)
   - Node.js Express (v5.2.1)
 - **Database**: PostgreSQL (v15) configured via `docker-compose`. Tooling includes:
-  - **Migrations**: Alembic (v1.19.1), SQLAlchemy (v2.0.52), and Psycopg2 (v2.9.12) are used universally for database migrations across all frameworks.
+  - **Migrations**: Alembic (v1.19.2), SQLAlchemy (v2.0.52), and Psycopg2 (v2.9.12) are used universally for database migrations across all frameworks.
   - **Drivers**: FastAPI/Flask use SQLAlchemy/Psycopg2, Node.js Express uses `pg` (v8.23.0), and .NET uses `Npgsql` (v10.0.3).
 - **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Unified Scripts**: `start.sh`, `test.sh`, and `lint.sh` available out of the box to manage both frontend and backend seamlessly.
