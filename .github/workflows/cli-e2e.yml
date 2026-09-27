@@ -133,7 +133,7 @@ jobs:
         nohup ./start.sh > start.log 2>&1 &
         
         # Wait for the backend to be healthy
-        npx wait-on tcp:8000 -t 120000
+        npx wait-on tcp:127.0.0.1:8000 -t 120000
         
         # Wait for the frontend to be reachable
         case "$FRONTEND" in
