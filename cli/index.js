@@ -47,9 +47,9 @@ async function main() {
       name: "frontend",
       message: "Which frontend framework would you like to use?",
       choices: [
-        { title: "Next.js (v16.3.8)", value: "nextjs", description: "React framework" },
+        { title: "Next.js (v16.4.0)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular (v22.2.1)",
+          title: "Angular (v22.2.2)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
@@ -59,7 +59,7 @@ async function main() {
           description: "Progressive JavaScript framework",
         },
         {
-          title: "Svelte (v5.57.1)",
+          title: "Svelte (v5.57.2)",
           value: "svelte",
           description: "Cybernetically enhanced web apps",
         },
@@ -90,7 +90,7 @@ async function main() {
           description: "Robust, C#, high-performance framework by Microsoft",
         },
         {
-          title: "Node.js Express (v5.2.1)",
+          title: "Node.js Express (v5.3.0)",
           value: "nodejs",
           description: "Minimalist web framework for Node.js",
         },
