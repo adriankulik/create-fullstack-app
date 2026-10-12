@@ -151,6 +151,26 @@ async function main() {
       await fs.writeJson(pkgPath, pkg, { spaces: 2 });
     }
 
+    // 5. Generate .env configuration
+    let frontendPort = 3000;
+    if (frontend === "angular") frontendPort = 4200;
+    if (frontend === "vue" || frontend === "svelte") frontendPort = 5173;
+
+    const envContent = [
+      "# Application environment configuration",
+      `FRONTEND_PORT=${frontendPort}`,
+      "BACKEND_PORT=8000",
+      "POSTGRES_PORT=5432",
+      "POSTGRES_USER=user",
+      "POSTGRES_PASSWORD=password",
+      "POSTGRES_DB=appdb",
+      "DATABASE_URL=postgresql://user:password@127.0.0.1:5432/appdb",
+      "PIPELOCK_MODE=balanced",
+      "PIPELOCK_PORT=8888",
+      "",
+    ].join("\n");
+    await fs.writeFile(path.join(targetDir, ".env"), envContent);
+
     // 5. Make all shell scripts executable
     const makeExecutable = (dir) => {
       const files = fs.readdirSync(dir);
@@ -299,7 +319,17 @@ async function main() {
 
     console.log(`  ${pc.cyan("./start.sh")}`);
     console.log(
-      "    Starts both the backend and frontend development servers.\n",
+      "    Starts the database in Docker and backend/frontend locally on your machine.\n",
+    );
+
+    console.log(`  ${pc.cyan("./start-docker.sh")} (or ${pc.cyan("./start.sh --docker")})`);
+    console.log(
+      "    Runs all services (frontend, backend, database) inside Docker containers.\n",
+    );
+
+    console.log(`  ${pc.cyan("./sandbox.sh")}`);
+    console.log(
+      "    Launches an isolated AI agent sandbox with Pipelock egress firewall & secret masking.\n",
     );
 
     console.log(`  ${pc.cyan("./test.sh")}`);

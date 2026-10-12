@@ -44,7 +44,8 @@ app.MapPost("/api/multiply", async ([FromBody] MultiplyRequest request) =>
     return new { result };
 });
 
-app.Run("http://127.0.0.1:8000");
+var urls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:8000";
+app.Run(urls);
 
 class MultiplyRequest
 {

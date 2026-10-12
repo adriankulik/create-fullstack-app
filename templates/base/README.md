@@ -18,13 +18,35 @@ chmod +x *.sh
 
 ### Running the App
   
-To start the database, backend, and frontend development servers, simply run:
-  
+You can run the application either directly on your host machine or completely containerized inside Docker:
+
+#### Option A: Local Development (Fastest Iteration)
+Starts PostgreSQL (v15) in Docker and runs the frontend & backend locally on your machine:
 ```bash
 ./start.sh
 ```
 
-**Database Note:** The `start.sh` script will automatically spin up a **PostgreSQL (v15)** database using Docker Compose, and it will run **Alembic (v1.19.1)** (using SQLAlchemy v2.0.52 and Psycopg2 v2.9.12) to handle migrations before starting the rest of your app.
+#### Option B: Fully Containerized (Docker Compose)
+Builds and starts all three tiers (frontend, backend, database + migration) in isolated Docker containers:
+```bash
+./start-docker.sh
+# or: ./start.sh --docker
+```
+
+**Database Note:** Both options ensure **PostgreSQL (v15)** is running and execute **Alembic** migrations before serving your app.
+
+### Isolated AI Sandbox & Egress Security (Pipelock)
+
+This repository includes a secure, self-contained AI sandbox for running autonomous coding agents (Antigravity, Claude Code, OpenCode):
+
+```bash
+./sandbox.sh
+```
+
+* **Containment**: Traps the agent within `/workspace`. The host filesystem, home directory, SSH keys, and system files cannot be accessed or deleted.
+* **Secret Protection**: Developer secrets in `.env.local` or `.env.secrets` are masked with empty mounts inside the container, preventing the AI from reading them.
+* **Pipelock AI Firewall**: All outbound network traffic is mediated by [Pipelock](https://github.com/luckyPipewrench/pipelock) (`pipelock:8888`), which scans for secret exfiltration (65+ DLP patterns), blocks SSRF to cloud metadata endpoints, and produces signed audit receipts.
+* **DevContainer Ready**: Open this folder in VS Code, Cursor, or OpenCode and select **"Reopen in Container"** to work inside `.devcontainer/`.
 
 ### Testing and Linting
 
@@ -54,3 +76,8 @@ This repository is optimized for development with AI agents:
   <li><b>accessibility-general</b>: Guidelines and tools for ensuring WCAG 2.2 accessibility compliance.</li>
 </ul>
 </details>
+
+## Acknowledgements
+
+- [Docker](https://www.docker.com/) (Apache License 2.0)
+- [Pipelock](https://github.com/luckyPipewrench/pipelock) (Apache License Version 2.0, January 2004)

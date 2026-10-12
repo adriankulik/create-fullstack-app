@@ -1,0 +1,21 @@
+{
+  "name": "Fullstack App - AI Sandbox",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "../docker-compose.sandbox.yml"
+  ],
+  "service": "ai-sandbox",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "remoteUser": "developer"
+}

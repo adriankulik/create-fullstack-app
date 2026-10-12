@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 set -e
 
+# If --docker or -d is passed, run the entire stack containerized
+if [ "$1" == "--docker" ] || [ "$1" == "-d" ]; then
+  echo "🚀 Starting all services via Docker Compose (frontend, backend, database)..."
+  docker compose up --build
+  exit 0
+fi
+
 echo "Starting Database via docker-compose..."
-docker compose up -d
+docker compose up -d db
 
 echo "Running Database Migrations (Alembic)..."
 (

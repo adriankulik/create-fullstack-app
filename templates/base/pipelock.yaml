@@ -1,0 +1,58 @@
+# Pipelock AI Firewall Configuration
+# Mediates HTTP, HTTPS, WebSocket, and MCP traffic for AI agents
+# Documentation: https://github.com/luckyPipewrench/pipelock
+
+version: "1"
+
+# Operating mode: balanced (blocks naive attacks + DLP) | strict (allowlist-only) | audit (warn only)
+mode: balanced
+
+proxy:
+  listen: "0.0.0.0:8888"
+
+# Receipts and verifiable audit evidence
+receipts:
+  enabled: true
+  dir: "/var/log/pipelock/receipts"
+
+# Data Loss Prevention (DLP)
+dlp:
+  enabled: true
+  block_on_detect: true
+  entropy_analysis: true
+  # Built-in detection for 65+ credential patterns (AWS, OpenAI, Anthropic, JWT, Private Keys, DB URLs)
+  patterns:
+    - "api_key"
+    - "secret_key"
+    - "bearer_token"
+    - "private_key"
+    - "db_credentials"
+
+# Network boundary & egress rules
+egress:
+  allowlist:
+    # Package registries & developer ecosystem
+    - "registry.npmjs.org"
+    - "pypi.org"
+    - "files.pythonhosted.org"
+    - "api.nuget.org"
+    - "github.com"
+    - "raw.githubusercontent.com"
+    # AI model API providers (for external agents)
+    - "api.anthropic.com"
+    - "api.openai.com"
+    - "generativelanguage.googleapis.com"
+  
+  blocklist:
+    # Block cloud instance metadata SSRF
+    - "169.254.169.254"
+    # Block local loopback & private subnets unless explicitly routed to internal docker network
+    - "127.0.0.1"
+
+# Model Context Protocol (MCP) sentinel
+mcp:
+  enabled: true
+  scan_inputs: true
+  scan_responses: true
+  block_tool_poisoning: true
+  allow_local_servers: true

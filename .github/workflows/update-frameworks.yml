@@ -85,6 +85,16 @@ jobs:
             fi
           done
 
+      - name: Update Docker and Pipelock Dependencies
+        run: |
+          # Fetch latest Pipelock release from GitHub
+          PIPELOCK_TAG=$(curl -s https://api.github.com/repos/luckyPipewrench/pipelock/releases/latest | jq -r '.tag_name // empty' | sed 's/^v//')
+          if [ -n "$PIPELOCK_TAG" ] && [ "$PIPELOCK_TAG" != "null" ]; then
+            echo "Latest Pipelock version found: $PIPELOCK_TAG"
+            sed -i.bak -E "s|(ghcr\.io/luckypipewrench/pipelock:)[0-9.]+|\1$PIPELOCK_TAG|g" templates/base/docker-compose.yml
+            rm -f templates/base/docker-compose.yml.bak
+          fi
+
       - name: Update Hardcoded Versions in UI (README & CLI)
         run: |
           cat << 'EOF' > update-ui.js
