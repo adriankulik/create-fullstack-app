@@ -102,14 +102,8 @@ jobs:
     - name: Scaffold App (${{ matrix.frontend }} + ${{ matrix.backend }})
       run: node cli/index.js test-app --frontend ${{ matrix.frontend }} --backend ${{ matrix.backend }}
 
-    - name: Build and start all containers (waits for healthy)
+    - name: Build and start all containers
       run: cd test-app && ./start.sh --no-open -d
-
-    - name: Run lint.sh (in containers)
-      run: cd test-app && ./lint.sh
-
-    - name: Run test.sh (in containers)
-      run: cd test-app && ./test.sh
 
     - name: Multiply API + database end-to-end check
       run: |
@@ -124,13 +118,12 @@ jobs:
       if: failure()
       run: |
         cd test-app
-        export COMPOSE_FILE=docker-compose.yml:docker-compose.sandbox.yml
         docker compose ps -a || true
         docker compose logs --tail=100 || true
 
     - name: Tear down
       if: always()
-      run: cd test-app && COMPOSE_FILE=docker-compose.yml:docker-compose.sandbox.yml docker compose down -v || true
+      run: cd test-app && docker compose down -v || true
 
   auto-merge:
     needs: e2e

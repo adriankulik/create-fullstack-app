@@ -30,12 +30,9 @@ services:
     networks:
       - app-network
     depends_on:
-      pipelock:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-      db:
-        condition: service_healthy
+      - pipelock
+      - backend
+      - db
     stdin_open: true
     tty: true
 

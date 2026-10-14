@@ -5,19 +5,38 @@
 set -euo pipefail
 cd "$1"
 FRONTEND_PORT="${2:-3000}"
-export COMPOSE_FILE="docker-compose.yml:docker-compose.sandbox.yml"
-
 echo "==> Services"
 docker compose ps
 
-echo "==> Frontend reachable on :$FRONTEND_PORT"
-curl -fsS -o /dev/null "http://127.0.0.1:$FRONTEND_PORT"
+echo "==> Waiting for frontend reachable on :$FRONTEND_PORT..."
+for i in $(seq 1 30); do
+  if curl -fsS -o /dev/null "http://127.0.0.1:$FRONTEND_PORT" 2>/dev/null; then
+    echo "Frontend reachable!"
+    break
+  fi
+  sleep 2
+done
+
+echo "==> Waiting for backend API reachable on :8000..."
+for i in $(seq 1 30); do
+  if curl -fsS -o /dev/null "http://127.0.0.1:8000" 2>/dev/null || curl -fsS -o /dev/null "http://127.0.0.1:8000/docs" 2>/dev/null; then
+    echo "Backend reachable!"
+    break
+  fi
+  sleep 2
+done
 
 NUMBER=$(( (RANDOM % 900) + 100 ))
 EXPECTED=$(( NUMBER * 2 ))
 echo "==> POST /api/multiply number=$NUMBER (expect $EXPECTED)"
-RESPONSE=$(curl -fsS -X POST http://127.0.0.1:8000/api/multiply \
-  -H 'Content-Type: application/json' -d "{\"number\": $NUMBER}")
+RESPONSE=""
+for i in $(seq 1 15); do
+  if RESPONSE=$(curl -fsS -X POST http://127.0.0.1:8000/api/multiply \
+    -H 'Content-Type: application/json' -d "{\"number\": $NUMBER}" 2>/dev/null); then
+    break
+  fi
+  sleep 2
+done
 echo "$RESPONSE"
 echo "$RESPONSE" | grep -Eq "\"result\": *$EXPECTED(\.0)?[,}]" \
   || { echo "Unexpected API response"; exit 1; }

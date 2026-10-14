@@ -20,8 +20,6 @@ for arg in "$@"; do
   esac
 done
 
-# Use both the app and the AI sandbox (devcontainer) compose files for every docker compose call
-export COMPOSE_FILE="docker-compose.yml:docker-compose.sandbox.yml"
 
 # Load ports from .env if present
 if [ -f .env ]; then
