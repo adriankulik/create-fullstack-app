@@ -20,6 +20,9 @@ for arg in "$@"; do
   esac
 done
 
+# Use both the app and the AI sandbox (devcontainer) compose files for every docker compose call
+export COMPOSE_FILE="docker-compose.yml:docker-compose.sandbox.yml"
+
 # Load ports from .env if present
 if [ -f .env ]; then
   export $(grep -E '^(FRONTEND_PORT|BACKEND_PORT|POSTGRES_PORT)=' .env 2>/dev/null | xargs) || true
@@ -38,7 +41,12 @@ if command -v lsof >/dev/null 2>&1; then
 fi
 
 echo "🚀 Building and starting all fullstack services with Docker Compose..."
-docker compose up -d --build "${PASS_ARGS[@]}"
+docker compose up -d --build --wait "${PASS_ARGS[@]}" || {
+  echo "❌ Some services failed to become healthy. Recent logs:"
+  docker compose ps
+  docker compose logs --tail=40
+  exit 1
+}
 
 FRONTEND_URL="http://localhost:${FRONTEND_PORT:-3000}"
 BACKEND_URL="http://localhost:${BACKEND_PORT:-8000}"

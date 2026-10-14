@@ -1,58 +1,31 @@
 # Pipelock AI Firewall Configuration
-# Mediates HTTP, HTTPS, WebSocket, and MCP traffic for AI agents
-# Documentation: https://github.com/luckyPipewrench/pipelock
+# Mediates outbound HTTP/HTTPS traffic from the AI sandbox (DLP, anti-exfiltration).
+# Docs: https://github.com/luckyPipewrench/pipelock
+# Regenerate a full reference config with: pipelock generate config --preset balanced
 
-version: "1"
+version: 1
 
-# Operating mode: balanced (blocks naive attacks + DLP) | strict (allowlist-only) | audit (warn only)
+# balanced = block known-bad destinations + DLP, allow monitored web access
+# strict   = allowlist-only | audit = log only
 mode: balanced
 
-proxy:
+# Destinations always reachable (package registries, git hosting, AI APIs)
+api_allowlist:
+  - "registry.npmjs.org"
+  - "pypi.org"
+  - "files.pythonhosted.org"
+  - "api.nuget.org"
+  - "github.com"
+  - "*.github.com"
+  - "*.githubusercontent.com"
+  - "*.anthropic.com"
+  - "*.openai.com"
+  - "generativelanguage.googleapis.com"
+
+fetch_proxy:
+  # Must listen on all interfaces so the sandbox container can reach it
   listen: "0.0.0.0:8888"
 
-# Receipts and verifiable audit evidence
-receipts:
+# Required so HTTP_PROXY / HTTPS_PROXY (CONNECT tunnels) work with zero agent changes
+forward_proxy:
   enabled: true
-  dir: "/var/log/pipelock/receipts"
-
-# Data Loss Prevention (DLP)
-dlp:
-  enabled: true
-  block_on_detect: true
-  entropy_analysis: true
-  # Built-in detection for 65+ credential patterns (AWS, OpenAI, Anthropic, JWT, Private Keys, DB URLs)
-  patterns:
-    - "api_key"
-    - "secret_key"
-    - "bearer_token"
-    - "private_key"
-    - "db_credentials"
-
-# Network boundary & egress rules
-egress:
-  allowlist:
-    # Package registries & developer ecosystem
-    - "registry.npmjs.org"
-    - "pypi.org"
-    - "files.pythonhosted.org"
-    - "api.nuget.org"
-    - "github.com"
-    - "raw.githubusercontent.com"
-    # AI model API providers (for external agents)
-    - "api.anthropic.com"
-    - "api.openai.com"
-    - "generativelanguage.googleapis.com"
-  
-  blocklist:
-    # Block cloud instance metadata SSRF
-    - "169.254.169.254"
-    # Block local loopback & private subnets unless explicitly routed to internal docker network
-    - "127.0.0.1"
-
-# Model Context Protocol (MCP) sentinel
-mcp:
-  enabled: true
-  scan_inputs: true
-  scan_responses: true
-  block_tool_poisoning: true
-  allow_local_servers: true

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ai-sandbox:
     build:
@@ -9,9 +7,10 @@ services:
     volumes:
       # Strictly bind-mount project workspace only
       - .:/workspace
-      # Mask sensitive developer files from host - empty mount so AI cannot read developer secrets
-      - /workspace/.env.secrets:/dev/null:ro
-      - /workspace/.env.local:/dev/null:ro
+      # Mask sensitive developer files: overlay them with an empty file so the AI cannot read them
+      - ./.sandbox-empty:/workspace/.env:ro
+      - ./.sandbox-empty:/workspace/.env.secrets:ro
+      - ./.sandbox-empty:/workspace/.env.local:ro
       # Preserve container virtual environment across runs
       - sandbox_venv:/home/developer/.venv
     environment:
@@ -23,7 +22,7 @@ services:
       - DATABASE_URL=postgresql://user:password@db:5432/appdb
       - NODE_ENV=development
       - VIRTUAL_ENV=/home/developer/.venv
-      - PATH=/home/developer/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - PATH=/home/developer/.venv/bin:/home/developer/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     cap_drop:
       - ALL
     security_opt:
@@ -31,9 +30,12 @@ services:
     networks:
       - app-network
     depends_on:
-      - pipelock
-      - backend
-      - db
+      pipelock:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     stdin_open: true
     tty: true
 

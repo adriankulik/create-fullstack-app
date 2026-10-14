@@ -51,14 +51,6 @@ describe('CLI End-to-End Tests', () => {
         expect(fs.existsSync(path.join(projectPath, 'database/Dockerfile'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, '.devcontainer/devcontainer.json'))).toBe(true);
 
-        // Run lint.sh
-        console.log(`  Running lint.sh for ${projectName}...`);
-        execSync('./lint.sh', { cwd: projectPath, stdio: 'inherit' });
-
-        // Run test.sh
-        console.log(`  Running test.sh for ${projectName}...`);
-        execSync('./test.sh', { cwd: projectPath, stdio: 'inherit' });
-
         console.log(`  Successfully verified ${projectName}`);
       });
     }

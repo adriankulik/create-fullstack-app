@@ -22,7 +22,8 @@ RUN python3 -m venv /home/developer/.venv && \
     chown -R developer:developer /home/developer
 
 ENV VIRTUAL_ENV=/home/developer/.venv \
-    PATH="/home/developer/.venv/bin:$PATH"
+    NPM_CONFIG_PREFIX=/home/developer/.local \
+    PATH="/home/developer/.venv/bin:/home/developer/.local/bin:$PATH"
 
 WORKDIR /workspace
 
