@@ -20,13 +20,25 @@ for arg in "$@"; do
   esac
 done
 
-echo "🚀 Building and starting all fullstack services with Docker Compose..."
-docker compose up -d --build "${PASS_ARGS[@]}"
-
 # Load ports from .env if present
 if [ -f .env ]; then
   export $(grep -E '^(FRONTEND_PORT|BACKEND_PORT|POSTGRES_PORT)=' .env 2>/dev/null | xargs) || true
 fi
+
+# Pre-flight check for port availability
+if command -v lsof >/dev/null 2>&1; then
+  for port_info in "${POSTGRES_PORT:-5432}:Database (POSTGRES_PORT)" "${BACKEND_PORT:-8000}:Backend (BACKEND_PORT)" "${FRONTEND_PORT:-3000}:Frontend (FRONTEND_PORT)"; do
+    port="${port_info%%:*}"
+    service="${port_info#*:}"
+    if lsof -i :"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+      echo "⚠️  Port $port ($service) is already in use by another process or container."
+      echo "   Please stop the conflicting process/container (e.g., docker stop <id>) or update the port in your .env file."
+    fi
+  done
+fi
+
+echo "🚀 Building and starting all fullstack services with Docker Compose..."
+docker compose up -d --build "${PASS_ARGS[@]}"
 
 FRONTEND_URL="http://localhost:${FRONTEND_PORT:-3000}"
 BACKEND_URL="http://localhost:${BACKEND_PORT:-8000}"
