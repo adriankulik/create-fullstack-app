@@ -18,11 +18,13 @@ chmod +x *.sh
 
 ### Running the App
   
-Builds and starts all three tiers (frontend, backend, database + migration) in isolated Docker containers:
+Builds and starts all three tiers (frontend, backend, database + migration) in isolated Docker containers, and automatically reopens your IDE (Cursor or VS Code) directly inside the DevContainer:
 
 ```bash
 ./start.sh
 ```
+
+*(Pass `--no-open` to skip opening the editor, or `-d` to run detached).*
 
 **Database Note:** Ensures **PostgreSQL (v15)** is running and automatically executes **Alembic** migrations before serving your app.
 

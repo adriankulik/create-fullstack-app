@@ -319,7 +319,7 @@ async function main() {
 
     console.log(`  ${pc.cyan("./start.sh")}`);
     console.log(
-      "    Runs all services (frontend, backend, database + migrations) inside Docker containers.\n",
+      "    Starts all services in Docker and automatically reopens your IDE in a DevContainer.\n",
     );
 
     console.log(`  ${pc.cyan("./sandbox.sh")}`);
