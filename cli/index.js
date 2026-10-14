@@ -319,12 +319,7 @@ async function main() {
 
     console.log(`  ${pc.cyan("./start.sh")}`);
     console.log(
-      "    Starts the database in Docker and backend/frontend locally on your machine.\n",
-    );
-
-    console.log(`  ${pc.cyan("./start-docker.sh")} (or ${pc.cyan("./start.sh --docker")})`);
-    console.log(
-      "    Runs all services (frontend, backend, database) inside Docker containers.\n",
+      "    Runs all services (frontend, backend, database + migrations) inside Docker containers.\n",
     );
 
     console.log(`  ${pc.cyan("./sandbox.sh")}`);

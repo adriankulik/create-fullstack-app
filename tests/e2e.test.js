@@ -38,7 +38,6 @@ describe('CLI End-to-End Tests', () => {
         expect(fs.existsSync(path.join(projectPath, 'frontend'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'backend'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'start.sh'))).toBe(true);
-        expect(fs.existsSync(path.join(projectPath, 'start-docker.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'sandbox.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'test.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'lint.sh'))).toBe(true);

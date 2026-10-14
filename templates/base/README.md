@@ -18,22 +18,13 @@ chmod +x *.sh
 
 ### Running the App
   
-You can run the application either directly on your host machine or completely containerized inside Docker:
+Builds and starts all three tiers (frontend, backend, database + migration) in isolated Docker containers:
 
-#### Option A: Local Development (Fastest Iteration)
-Starts PostgreSQL (v15) in Docker and runs the frontend & backend locally on your machine:
 ```bash
 ./start.sh
 ```
 
-#### Option B: Fully Containerized (Docker Compose)
-Builds and starts all three tiers (frontend, backend, database + migration) in isolated Docker containers:
-```bash
-./start-docker.sh
-# or: ./start.sh --docker
-```
-
-**Database Note:** Both options ensure **PostgreSQL (v15)** is running and execute **Alembic** migrations before serving your app.
+**Database Note:** Ensures **PostgreSQL (v15)** is running and automatically executes **Alembic** migrations before serving your app.
 
 ### Isolated AI Sandbox & Egress Security (Pipelock)
 
