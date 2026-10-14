@@ -15,6 +15,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN groupadd -g 1001 developer || true && \
     useradd -u 1001 -g 1001 -m -s /bin/bash developer || true
 
+# Provision persistent virtual environment for Python backends & dev tools
+RUN python3 -m venv /home/developer/.venv && \
+    /home/developer/.venv/bin/pip install --no-cache-dir --upgrade pip wheel pytest ruff && \
+    echo 'source /home/developer/.venv/bin/activate' >> /home/developer/.bashrc && \
+    chown -R developer:developer /home/developer
+
+ENV VIRTUAL_ENV=/home/developer/.venv \
+    PATH="/home/developer/.venv/bin:$PATH"
+
 WORKDIR /workspace
 
 # Set default user
