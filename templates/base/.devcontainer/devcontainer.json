@@ -1,0 +1,26 @@
+{
+  "name": "Fullstack App - AI Sandbox",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "../docker-compose.sandbox.yml"
+  ],
+  "service": "ai-sandbox",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/home/developer/.venv/bin/python",
+        "python.terminal.activateEnvironment": true
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "ms-python.python",
+        "charliermarsh.ruff"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -c 'if [ -f backend/requirements.txt ]; then pip install --no-cache-dir -r backend/requirements.txt; fi && if [ -f database/requirements.txt ]; then pip install --no-cache-dir -r database/requirements.txt; fi'",
+  "remoteUser": "developer"
+}

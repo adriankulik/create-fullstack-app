@@ -60,6 +60,15 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
+## 5. Sandbox & Security Boundaries
+
+**Operate within your boundary. Never touch or expose developer secrets.**
+
+- **Workspace Containment**: Never attempt path traversal outside `/workspace` or invoke operations targeting the parent system.
+- **Zero-Secret Rule**: Never request, log, or hardcode environment secrets. Use dummy credentials from `.env.example` / `.env.sandbox`.
+- **Egress Firewall Compliance**: All network egress passes through Pipelock. Do not attempt to bypass proxy settings, probe internal network IPs (`169.254.169.254`, `127.0.0.1`), or emit raw credentials over HTTP.
+- **Fail-Closed MCP Policies**: When executing MCP tools, follow strict validation and avoid destructive filesystem operations outside `/workspace`.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.

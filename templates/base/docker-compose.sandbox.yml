@@ -1,0 +1,40 @@
+services:
+  ai-sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox
+    working_dir: /workspace
+    volumes:
+      # Strictly bind-mount project workspace only
+      - .:/workspace
+      # Mask sensitive developer files: overlay them with an empty file so the AI cannot read them
+      - ./.sandbox-empty:/workspace/.env:ro
+      - ./.sandbox-empty:/workspace/.env.secrets:ro
+      - ./.sandbox-empty:/workspace/.env.local:ro
+      # Preserve container virtual environment across runs
+      - sandbox_venv:/home/developer/.venv
+    environment:
+      # Route all agent traffic through Pipelock AI firewall
+      - HTTP_PROXY=http://pipelock:8888
+      - HTTPS_PROXY=http://pipelock:8888
+      - ALL_PROXY=http://pipelock:8888
+      - NO_PROXY=localhost,127.0.0.1,db,backend,frontend
+      - DATABASE_URL=postgresql://user:password@db:5432/appdb
+      - NODE_ENV=development
+      - VIRTUAL_ENV=/home/developer/.venv
+      - PATH=/home/developer/.venv/bin:/home/developer/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - app-network
+    depends_on:
+      - pipelock
+      - backend
+      - db
+    stdin_open: true
+    tty: true
+
+volumes:
+  sandbox_venv:

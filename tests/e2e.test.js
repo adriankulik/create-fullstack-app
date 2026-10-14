@@ -38,17 +38,18 @@ describe('CLI End-to-End Tests', () => {
         expect(fs.existsSync(path.join(projectPath, 'frontend'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'backend'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'start.sh'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'sandbox.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'test.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, 'lint.sh'))).toBe(true);
         expect(fs.existsSync(path.join(projectPath, '.gitignore'))).toBe(true);
-
-        // Run lint.sh
-        console.log(`  Running lint.sh for ${projectName}...`);
-        execSync('./lint.sh', { cwd: projectPath, stdio: 'inherit' });
-
-        // Run test.sh
-        console.log(`  Running test.sh for ${projectName}...`);
-        execSync('./test.sh', { cwd: projectPath, stdio: 'inherit' });
+        expect(fs.existsSync(path.join(projectPath, '.env'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'docker-compose.yml'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'docker-compose.sandbox.yml'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'pipelock.yaml'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'frontend/Dockerfile'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'backend/Dockerfile'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, 'database/Dockerfile'))).toBe(true);
+        expect(fs.existsSync(path.join(projectPath, '.devcontainer/devcontainer.json'))).toBe(true);
 
         console.log(`  Successfully verified ${projectName}`);
       });

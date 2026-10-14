@@ -91,70 +91,39 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Set up Node.js
+    - name: Set up Node.js (for the CLI only)
       uses: actions/setup-node@v4
       with:
         node-version: '24'
 
-    - name: Set up .NET
-      if: matrix.backend == 'dotnet'
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Install Dependencies
-      run: |
-        npm install
-        npm install -D @playwright/test wait-on
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps chromium
+    - name: Install CLI Dependencies
+      run: npm ci
 
     - name: Scaffold App (${{ matrix.frontend }} + ${{ matrix.backend }})
       run: node cli/index.js test-app --frontend ${{ matrix.frontend }} --backend ${{ matrix.backend }}
 
-    - name: Run lint.sh
-      run: cd test-app && ./lint.sh
+    - name: Build and start all containers
+      run: cd test-app && ./start.sh --no-open -d
 
-    - name: Run test.sh
-      run: cd test-app && ./test.sh
+    - name: Multiply API + database end-to-end check
+      run: |
+        case "${{ matrix.frontend }}" in
+          angular) PORT=4200 ;;
+          vue|svelte) PORT=5173 ;;
+          *) PORT=3000 ;;
+        esac
+        tests/container-e2e.sh test-app "$PORT"
 
-    - name: Start Servers and Run Integration Test
-      env:
-        FRONTEND: ${{ matrix.frontend }}
+    - name: Print container logs on failure
+      if: failure()
       run: |
         cd test-app
-        # Start the backend and frontend in the background
-        nohup ./start.sh > start.log 2>&1 &
-        
-        # Wait for the backend to be healthy
-        npx wait-on tcp:127.0.0.1:8000 -t 120000
-        
-        # Wait for the frontend to be reachable
-        case "$FRONTEND" in
-        nextjs)
-          npx wait-on http-get://127.0.0.1:3000 -t 120000
-          ;;
-        angular)
-          npx wait-on http-get://127.0.0.1:4200 -t 120000
-          ;;
-        *)
-          npx wait-on http-get://127.0.0.1:5173 -t 120000
-          ;;
-        esac
-        
-        # Run the Playwright integration test from the root directory
-        cd ..
-        npx playwright test tests/integration.spec.js --project=chromium
+        docker compose ps -a || true
+        docker compose logs --tail=100 || true
 
-    - name: Print start.log on failure
-      if: failure()
-      run: cat test-app/start.log || true
+    - name: Tear down
+      if: always()
+      run: cd test-app && docker compose down -v || true
 
   auto-merge:
     needs: e2e

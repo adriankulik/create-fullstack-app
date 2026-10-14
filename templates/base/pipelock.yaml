@@ -1,0 +1,31 @@
+# Pipelock AI Firewall Configuration
+# Mediates outbound HTTP/HTTPS traffic from the AI sandbox (DLP, anti-exfiltration).
+# Docs: https://github.com/luckyPipewrench/pipelock
+# Regenerate a full reference config with: pipelock generate config --preset balanced
+
+version: 1
+
+# balanced = block known-bad destinations + DLP, allow monitored web access
+# strict   = allowlist-only | audit = log only
+mode: balanced
+
+# Destinations always reachable (package registries, git hosting, AI APIs)
+api_allowlist:
+  - "registry.npmjs.org"
+  - "pypi.org"
+  - "files.pythonhosted.org"
+  - "api.nuget.org"
+  - "github.com"
+  - "*.github.com"
+  - "*.githubusercontent.com"
+  - "*.anthropic.com"
+  - "*.openai.com"
+  - "generativelanguage.googleapis.com"
+
+fetch_proxy:
+  # Must listen on all interfaces so the sandbox container can reach it
+  listen: "0.0.0.0:8888"
+
+# Required so HTTP_PROXY / HTTPS_PROXY (CONNECT tunnels) work with zero agent changes
+forward_proxy:
+  enabled: true

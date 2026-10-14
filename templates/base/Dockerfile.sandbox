@@ -1,0 +1,33 @@
+FROM node:22-bookworm-slim
+
+# Install system utilities, python, and git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-venv \
+    git \
+    curl \
+    ca-certificates \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root developer user
+RUN groupadd -g 1001 developer || true && \
+    useradd -u 1001 -g 1001 -m -s /bin/bash developer || true
+
+# Provision persistent virtual environment for Python backends & dev tools
+RUN python3 -m venv /home/developer/.venv && \
+    /home/developer/.venv/bin/pip install --no-cache-dir --upgrade pip wheel pytest ruff && \
+    echo 'source /home/developer/.venv/bin/activate' >> /home/developer/.bashrc && \
+    chown -R developer:developer /home/developer
+
+ENV VIRTUAL_ENV=/home/developer/.venv \
+    NPM_CONFIG_PREFIX=/home/developer/.local \
+    PATH="/home/developer/.venv/bin:/home/developer/.local/bin:$PATH"
+
+WORKDIR /workspace
+
+# Set default user
+USER developer
+
+CMD ["/bin/bash"]

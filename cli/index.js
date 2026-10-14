@@ -9,14 +9,28 @@ const { execSync } = require("child_process");
 
 async function main() {
   const pkg = require("../package.json");
+  let version = pkg.version;
   let publishDate = "Local build";
   try {
     publishDate = require("./build-date.js") + " (UTC)";
   } catch (e) {}
 
+  try {
+    if (fs.existsSync(path.resolve(__dirname, "../.git"))) {
+      const gitTag = execSync("git describe --tags --abbrev=0 2>/dev/null", { encoding: "utf8" }).trim();
+      if (gitTag) {
+        version = gitTag.replace(/^v/, "");
+      }
+      const commitDate = execSync("git log -1 --format=%cd --date=format:'%Y-%m-%d %H:%M:%S' 2>/dev/null", { encoding: "utf8" }).trim();
+      if (commitDate) {
+        publishDate = `${commitDate} (local development)`;
+      }
+    }
+  } catch (e) {}
+
   const { asciiArt } = require("./logo");
   console.log(pc.cyan(asciiArt));
-  console.log(pc.cyan(`\nWelcome to create-fullstack-app! (v${pkg.version}, published on ${publishDate})\n`));
+  console.log(pc.cyan(`\nWelcome to create-fullstack-app! (v${version}, published on ${publishDate})\n`));
 
   // Simple argument parsing
   const args = process.argv.slice(2);
@@ -151,6 +165,26 @@ async function main() {
       await fs.writeJson(pkgPath, pkg, { spaces: 2 });
     }
 
+    // 5. Generate .env configuration
+    let frontendPort = 3000;
+    if (frontend === "angular") frontendPort = 4200;
+    if (frontend === "vue" || frontend === "svelte") frontendPort = 5173;
+
+    const envContent = [
+      "# Application environment configuration",
+      `FRONTEND_PORT=${frontendPort}`,
+      "BACKEND_PORT=8000",
+      "POSTGRES_PORT=5432",
+      "POSTGRES_USER=user",
+      "POSTGRES_PASSWORD=password",
+      "POSTGRES_DB=appdb",
+      "DATABASE_URL=postgresql://user:password@127.0.0.1:5432/appdb",
+      "PIPELOCK_MODE=balanced",
+      "PIPELOCK_PORT=8888",
+      "",
+    ].join("\n");
+    await fs.writeFile(path.join(targetDir, ".env"), envContent);
+
     // 5. Make all shell scripts executable
     const makeExecutable = (dir) => {
       const files = fs.readdirSync(dir);
@@ -164,117 +198,6 @@ async function main() {
       });
     };
     makeExecutable(targetDir);
-
-    // 6. Install dependencies
-    console.log(
-      pc.blue("\nInstalling dependencies (this may take a minute)..."),
-    );
-
-    // Frontend installation
-    console.log(pc.cyan("  Installing frontend dependencies..."));
-    execSync("npm install --no-audit --no-fund ", { cwd: targetFrontend, stdio: "inherit" });
-
-    if (backend === "fastapi" || backend === "flask") {
-      console.log(pc.cyan("  Setting up backend virtual environment..."));
-      const pythonCmd = process.platform === "win32" ? "python" : "python3";
-      try {
-        execSync(`${pythonCmd} -m venv venv`, {
-          cwd: targetBackend,
-          stdio: "inherit",
-        });
-
-        const pipPath =
-          process.platform === "win32"
-            ? path.join("venv", "Scripts", "pip")
-            : path.join("venv", "bin", "pip");
-
-        console.log(pc.cyan("  Installing backend dependencies..."));
-        execSync(`${pipPath} install -r requirements.txt`, {
-          cwd: targetBackend,
-          stdio: "inherit",
-        });
-      } catch (e) {
-        console.error(
-          pc.red(
-            "\n  Failed to set up Python virtual environment or install dependencies."
-          )
-        );
-        console.error(
-          pc.yellow(
-            "  TIP: We frequently update templates to use the latest framework versions."
-          )
-        );
-        console.error(
-          pc.yellow(
-            "  If pip failed to find a matching version, your default 'python3' version might be too old."
-          )
-        );
-        console.error(
-          pc.yellow(
-            "  Please try updating to the newest version of Python and run this again."
-          )
-        );
-        process.exit(1);
-      }
-    } else if (backend === "dotnet") {
-      // Check if .NET 9+ SDK is available
-      let dotnetMajor = 0;
-      try {
-        const version = execSync("dotnet --version", { stdio: "pipe" }).toString().trim();
-        dotnetMajor = parseInt(version.split(".")[0], 10);
-      } catch {
-        dotnetMajor = 0;
-      }
-
-      if (dotnetMajor < 10) {
-        console.log(pc.yellow(`\n  .NET 10 SDK is required but ${dotnetMajor > 0 ? `v${dotnetMajor} was found` : "dotnet was not found"} on your system.`));
-
-        if (process.platform === "win32") {
-          console.log(pc.yellow("  Please install the .NET 10 SDK from: https://aka.ms/dotnet/download"));
-        } else {
-          const { installDotnet } = await prompts({
-            type: "confirm",
-            name: "installDotnet",
-            message: "Would you like to install the .NET 10 SDK automatically? (uses the official Microsoft install script)",
-            initial: true,
-          });
-
-          if (installDotnet) {
-            console.log(pc.cyan("  Installing .NET 10 SDK (this may take a few minutes)..."));
-            try {
-              execSync(
-                "curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0",
-                { stdio: "inherit" }
-              );
-              // Make the newly installed dotnet available in the current process without a shell restart
-              const dotnetRoot = path.join(os.homedir(), ".dotnet");
-              process.env.DOTNET_ROOT = dotnetRoot;
-              process.env.PATH = `${dotnetRoot}:${process.env.PATH}`;
-              console.log(pc.green("  .NET 10 SDK installed successfully."));
-              console.log(pc.yellow(`  Add ${dotnetRoot} to your PATH permanently by updating your shell profile (e.g. ~/.zshrc).`));
-            } catch (e) {
-              console.log(pc.yellow("  Could not install .NET SDK automatically. Please install it from https://aka.ms/dotnet/download"));
-            }
-          } else {
-            console.log(pc.yellow("  Skipping .NET SDK installation. Please install .NET 10 SDK from https://aka.ms/dotnet/download"));
-          }
-        }
-      }
-
-      console.log(pc.cyan("  Restoring .NET dependencies..."));
-      try {
-        execSync("dotnet restore backend.sln", { cwd: targetBackend, stdio: "inherit" });
-      } catch (e) {
-        console.log(
-          pc.yellow(
-            "  Could not restore .NET dependencies automatically. Please make sure .NET 10 SDK is installed and in your PATH.",
-          ),
-        );
-      }
-    } else if (backend === "nodejs") {
-      console.log(pc.cyan("  Installing Node.js backend dependencies..."));
-      execSync("npm install --no-audit --no-fund ", { cwd: targetBackend, stdio: "inherit" });
-    }
 
     // 7. Initialize Git repository
     console.log(pc.blue("\nInitializing Git repository..."));
@@ -299,7 +222,12 @@ async function main() {
 
     console.log(`  ${pc.cyan("./start.sh")}`);
     console.log(
-      "    Starts both the backend and frontend development servers.\n",
+      "    Starts all services in Docker and automatically reopens your IDE in a DevContainer.\n",
+    );
+
+    console.log(`  ${pc.cyan("./sandbox.sh")}`);
+    console.log(
+      "    Launches an isolated AI agent sandbox with Pipelock egress firewall & secret masking.\n",
     );
 
     console.log(`  ${pc.cyan("./test.sh")}`);

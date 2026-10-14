@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 set -e
-if [ -d "venv" ]; then
+if [ -d "venv" ] && [ -x "venv/bin/python" ] && ./venv/bin/python -c "import sys" >/dev/null 2>&1; then
     source venv/bin/activate
-    ruff check . --fix
-    ruff format .
-else
-    ruff check . --fix
-    ruff format .
 fi
+ruff check . --fix
+ruff format .
