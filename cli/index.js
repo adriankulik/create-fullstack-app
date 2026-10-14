@@ -9,14 +9,28 @@ const { execSync } = require("child_process");
 
 async function main() {
   const pkg = require("../package.json");
+  let version = pkg.version;
   let publishDate = "Local build";
   try {
     publishDate = require("./build-date.js") + " (UTC)";
   } catch (e) {}
 
+  try {
+    if (fs.existsSync(path.resolve(__dirname, "../.git"))) {
+      const gitTag = execSync("git describe --tags --abbrev=0 2>/dev/null", { encoding: "utf8" }).trim();
+      if (gitTag) {
+        version = gitTag.replace(/^v/, "");
+      }
+      const commitDate = execSync("git log -1 --format=%cd --date=format:'%Y-%m-%d %H:%M:%S' 2>/dev/null", { encoding: "utf8" }).trim();
+      if (commitDate) {
+        publishDate = `${commitDate} (local development)`;
+      }
+    }
+  } catch (e) {}
+
   const { asciiArt } = require("./logo");
   console.log(pc.cyan(asciiArt));
-  console.log(pc.cyan(`\nWelcome to create-fullstack-app! (v${pkg.version}, published on ${publishDate})\n`));
+  console.log(pc.cyan(`\nWelcome to create-fullstack-app! (v${version}, published on ${publishDate})\n`));
 
   // Simple argument parsing
   const args = process.argv.slice(2);
