@@ -4,7 +4,8 @@ set -e
 echo "🔒 Initializing AI Sandbox with Pipelock Egress Firewall..."
 
 # Start supporting services (database, migrations, backend, and pipelock firewall)
-docker compose -f docker-compose.yml -f docker-compose.sandbox.yml up -d db migration backend pipelock
+docker compose -f docker-compose.yml -f docker-compose.sandbox.yml up -d --wait db migration backend pipelock
+"$(dirname "${BASH_SOURCE[0]}")/urls.sh"
 
 # Ensure backend Python dependencies are installed in the sandbox venv if python backend exists
 if [ -f backend/requirements.txt ]; then

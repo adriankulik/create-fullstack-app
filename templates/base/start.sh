@@ -46,15 +46,7 @@ docker compose up -d --build --wait "${PASS_ARGS[@]}" || {
   exit 1
 }
 
-FRONTEND_URL="http://localhost:${FRONTEND_PORT:-3000}"
-BACKEND_URL="http://localhost:${BACKEND_PORT:-8000}"
-
-echo ""
-echo "✅ Fullstack services are up and running:"
-echo "   • Frontend: $FRONTEND_URL"
-echo "   • Backend:  $BACKEND_URL"
-echo "   • Database: localhost:${POSTGRES_PORT:-5432}"
-echo ""
+"$(dirname "${BASH_SOURCE[0]}")/urls.sh"
 
 # Reopen directly in DevContainer window if interactive and editor is available
 if [ "$NO_OPEN" != "true" ] && [ -z "$CI" ] && [ -t 1 ]; then
