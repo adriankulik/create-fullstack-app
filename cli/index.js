@@ -61,14 +61,14 @@ async function main() {
       name: "frontend",
       message: "Which frontend framework would you like to use?",
       choices: [
-        { title: "Next.js (v16.4.0)", value: "nextjs", description: "React framework" },
+        { title: "Next.js (v16.4.2)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular (v22.2.2)",
+          title: "Angular (v22.2.3)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
         {
-          title: "Vue (v3.5.43)",
+          title: "Vue (v3.5.44)",
           value: "vue",
           description: "Progressive JavaScript framework",
         },
@@ -99,7 +99,7 @@ async function main() {
           description: "Lightweight Python WSGI web application framework",
         },
         {
-          title: ".NET (v10.0.12)",
+          title: ".NET (v10.0.13)",
           value: "dotnet",
           description: "Robust, C#, high-performance framework by Microsoft",
         },

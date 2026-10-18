@@ -30,17 +30,17 @@ You will be prompted to choose a project name, your preferred frontend, and back
 ## Features
 
 - **Frontend Options**:
-  - Next.js (v16.4.0)
-  - Angular (v22.2.2) - _Configured with Zone.js_
-  - Vue (v3.5.43)
+  - Next.js (v16.4.2)
+  - Angular (v22.2.3) - _Configured with Zone.js_
+  - Vue (v3.5.44)
   - Svelte (v5.57.2)
 - **Backend Options**:
   - FastAPI (v0.141.1)
   - Flask (v3.1.3)
-  - .NET (v10.0.12)
+  - .NET (v10.0.13)
   - Node.js Express (v5.3.0)
 - **Database**: PostgreSQL (v15) configured via `docker-compose`. Tooling includes:
-  - **Migrations**: Alembic (v1.20.0), SQLAlchemy (v2.1.4), and Psycopg2 (v2.9.13) are used universally for database migrations across all frameworks.
+  - **Migrations**: Alembic (v1.20.0), SQLAlchemy (v2.1.5), and Psycopg2 (v2.9.13) are used universally for database migrations across all frameworks.
   - **Drivers**: FastAPI/Flask use SQLAlchemy/Psycopg2, Node.js Express uses `pg` (v8.23.0), and .NET uses `Npgsql` (v10.0.3).
 - **Opinionated Defaults**: We bake in sensible, predefined choices (e.g., Angular uses `zone.js`, testing is unified under Playwright and framework-native test runners).
 - **Fullstack Containerization**: Every frontend and backend framework includes an optimized, production-ready `Dockerfile`. Orchestrate the entire three-tier architecture (frontend, backend, database + migrations) via Docker Compose (`./start.sh` or `docker compose up --build`).
