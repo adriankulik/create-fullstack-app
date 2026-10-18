@@ -22,10 +22,10 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.0",
+    "@playwright/test": "^1.64.1",
     "@types/pg": "^8.23.1",
     "pg": "^8.23.1",
-    "vitest": "^5.0.3",
+    "vitest": "^5.0.5",
     "wait-on": "^9.5.1"
   },
   "scripts": {
