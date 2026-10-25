@@ -61,7 +61,7 @@ async function main() {
       name: "frontend",
       message: "Which frontend framework would you like to use?",
       choices: [
-        { title: "Next.js (v16.4.2)", value: "nextjs", description: "React framework" },
+        { title: "Next.js (v16.4.3)", value: "nextjs", description: "React framework" },
         {
           title: "Angular (v22.2.3)",
           value: "angular",
