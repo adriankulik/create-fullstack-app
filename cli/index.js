@@ -63,7 +63,7 @@ async function main() {
       choices: [
         { title: "Next.js (v16.4.3)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular (v22.2.3)",
+          title: "Angular (v22.2.4)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
@@ -73,7 +73,7 @@ async function main() {
           description: "Progressive JavaScript framework",
         },
         {
-          title: "Svelte (v5.57.2)",
+          title: "Svelte (v5.57.3)",
           value: "svelte",
           description: "Cybernetically enhanced web apps",
         },
@@ -99,7 +99,7 @@ async function main() {
           description: "Lightweight Python WSGI web application framework",
         },
         {
-          title: ".NET (v10.0.13)",
+          title: ".NET (v10.0.14)",
           value: "dotnet",
           description: "Robust, C#, high-performance framework by Microsoft",
         },

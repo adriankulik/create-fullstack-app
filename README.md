@@ -31,13 +31,13 @@ You will be prompted to choose a project name, your preferred frontend, and back
 
 - **Frontend Options**:
   - Next.js (v16.4.3)
-  - Angular (v22.2.3) - _Configured with Zone.js_
+  - Angular (v22.2.4) - _Configured with Zone.js_
   - Vue (v3.5.44)
-  - Svelte (v5.57.2)
+  - Svelte (v5.57.3)
 - **Backend Options**:
   - FastAPI (v0.141.1)
   - Flask (v3.1.3)
-  - .NET (v10.0.13)
+  - .NET (v10.0.14)
   - Node.js Express (v5.3.0)
 - **Database**: PostgreSQL (v15) configured via `docker-compose`. Tooling includes:
   - **Migrations**: Alembic (v1.20.1), SQLAlchemy (v2.1.6), and Psycopg2 (v2.9.13) are used universally for database migrations across all frameworks.
