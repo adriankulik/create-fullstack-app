@@ -10,23 +10,23 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "next": "^16.4.5",
+    "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
+    "@testing-library/user-event": "^14.6.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^16.4.5",
+    "eslint-config-next": "^16.4.6",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "typescript": "^5.9.0"
   }
 }
