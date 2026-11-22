@@ -63,17 +63,17 @@ async function main() {
       choices: [
         { title: "Next.js (v16.4.6)", value: "nextjs", description: "React framework" },
         {
-          title: "Angular (v22.2.6)",
+          title: "Angular (v22.3.0)",
           value: "angular",
           description: "Enterprise-grade platform",
         },
         {
-          title: "Vue (v3.5.45)",
+          title: "Vue (v3.5.46)",
           value: "vue",
           description: "Progressive JavaScript framework",
         },
         {
-          title: "Svelte (v5.57.3)",
+          title: "Svelte (v5.59.1)",
           value: "svelte",
           description: "Cybernetically enhanced web apps",
         },

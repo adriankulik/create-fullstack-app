@@ -12,7 +12,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.9",
     "eslint": "^10.4.0",
@@ -20,12 +20,12 @@
     "globals": "^17.14.0",
     "jsdom": "^31.0.1",
     "prettier": "^3.10.1",
-    "svelte": "^5.57.3",
+    "svelte": "^5.59.1",
     "svelte-check": "^4.7.8",
     "tslib": "^2.9.1",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.72.2",
+    "typescript-eslint": "^8.73.0",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   }
 }
