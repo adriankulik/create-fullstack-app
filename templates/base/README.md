@@ -30,16 +30,12 @@ Builds and starts all three tiers (frontend, backend, database + migration) in i
 
 ### Isolated AI Sandbox & Egress Security (Pipelock)
 
-This repository includes a secure, self-contained AI sandbox for running autonomous coding agents (Antigravity, Claude Code, OpenCode):
-
-```bash
-./sandbox.sh
-```
+Running `./start.sh` automatically reopens your IDE inside `.devcontainer/`, a secure, self-contained AI sandbox for autonomous coding agents (Antigravity, Claude Code, OpenCode):
 
 * **Containment**: Traps the agent within `/workspace`. The host filesystem, home directory, SSH keys, and system files cannot be accessed or deleted.
 * **Secret Protection**: Developer secrets in `.env.local` or `.env.secrets` are masked with empty mounts inside the container, preventing the AI from reading them.
 * **Pipelock AI Firewall**: All outbound network traffic is mediated by [Pipelock](https://github.com/luckyPipewrench/pipelock) (`pipelock:8888`), which scans for secret exfiltration (65+ DLP patterns), blocks SSRF to cloud metadata endpoints, and produces signed audit receipts.
-* **DevContainer Ready**: Open this folder in VS Code, Cursor, or OpenCode and select **"Reopen in Container"** to work inside `.devcontainer/`.
+* **DevContainer Ready**: You can also open this folder in VS Code, Cursor, or OpenCode and select **"Reopen in Container"** manually at any time.
 
 ### Testing and Linting
 

@@ -222,12 +222,7 @@ async function main() {
 
     console.log(`  ${pc.cyan("./start.sh")}`);
     console.log(
-      "    Starts all services in Docker and automatically reopens your IDE in a DevContainer.\n",
-    );
-
-    console.log(`  ${pc.cyan("./sandbox.sh")}`);
-    console.log(
-      "    Launches an isolated AI agent sandbox with Pipelock egress firewall & secret masking.\n",
+      "    Starts all services in Docker and automatically reopens your IDE in the AI Sandbox DevContainer.\n",
     );
 
     console.log(`  ${pc.cyan("./test.sh")}`);
